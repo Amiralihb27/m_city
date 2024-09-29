@@ -4,6 +4,7 @@ import { AppBar, Toolbar, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import manchester_city_logo from "../../Resources/images/logos/manchester_city_logo.png";
+import { CityLogo } from "../Utils/tools"
 
 
 const Header = () => {
@@ -24,12 +25,12 @@ const Header = () => {
                 }}>
                 <div style={{ flexGrow: 1 }}>
                     <div className="header_logo">
-                        <img
-                        src={manchester_city_logo}
-                        className="imageIcon"
-                        alt='iconImage'></img>
-
-
+                        <CityLogo
+                            link={true}
+                            linkTo='/'
+                            width="70px"
+                            height="70px"
+                        />
                     </div>
 
                 </div>
