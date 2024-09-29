@@ -74,6 +74,10 @@ button {
     margin: 10px 0px;
 }
 
+.input_error{
+    border: 2px solid red !important;
+}
+
 .success_label {
     color: #98c5e9;
     font-weight: 600;

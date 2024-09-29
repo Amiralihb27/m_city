@@ -1,6 +1,6 @@
-import React , { useState } from 'react';
+import React, { useState } from 'react';
 
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { Redirect } from 'react-router-dom';
 
 import { useFormik } from 'formik';
@@ -10,27 +10,28 @@ const SignIn = () => {
     const [loading, setLoading] = useState(false)
 
     const formik = useFormik({
-        initialValues:{
-            email:'',
-            password:''
+        initialValues: {
+            email: '',
+            password: ''
         },
         validationSchema: Yup.object({
             email: Yup.string()
                 .email('Invalid email address')
                 .required('The email is required'),
-            password:Yup.string()
-                .required('The email is required')
+            password: Yup.string()
+                .required('The password is required')
         }),
-        onSubmit: (values) =>{
+        onSubmit: (values) => {
             setLoading(true)
-          console.log(values)
-        }
+            console.log(values)
+        },
+        validateOnChange: true,
     })
 
 
-    return(
+    return (
         <div className="container">
-            <div className="signin_wrapper" style={{margin:'100px'}}>
+            <div className="signin_wrapper" style={{ margin: '100px' }}>
 
                 <form onSubmit={formik.handleSubmit}>
                     <h2>Please login</h2>
@@ -40,35 +41,38 @@ const SignIn = () => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.email}
+                        className={formik.touched.email && formik.errors.email ? 'input_error' : ''}
                     />
-                    { formik.touched.email && formik.errors.email ?
+                    {formik.touched.email && formik.errors.email &&
                         <div className="error_label">
                             {formik.errors.email}
                         </div>
-                    :null}
+                    }
 
 
                     <input
                         name="password"
                         type="password"
+                        placeholder='password'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.password}
+                        className={formik.touched.password && formik.errors.password ? 'input_error' : ''}
                     />
-                    { formik.touched.password && formik.errors.password ?
+                    {formik.touched.password && formik.errors.password &&
                         <div className="error_label">
                             {formik.errors.password}
                         </div>
-                    :null}
+                    }
 
-                    
-                        {loading ?
-                            <CircularProgress color="secondary" className="progress"/>
+
+                    {loading ?
+                        <CircularProgress color="secondary" className="progress" />
                         :
-                            <button type="submit">Log in</button>
-                        }
+                        <button type="submit">Log in</button>
+                    }
 
-                 
+
                 </form>
 
             </div>
