@@ -7,7 +7,14 @@ import manchester_city_logo from "../../Resources/images/logos/manchester_city_l
 import { CityLogo } from "../Utils/tools"
 
 
-const Header = () => {
+const Header = ({ user }) => {
+    const logoutHandler = () =>{
+        return(
+            <>
+                    
+            </>
+        )
+    }
     return (
         <AppBar
             position="fixed"
@@ -40,9 +47,18 @@ const Header = () => {
                 <Link to="/the_matches">
                     <Button color="inherit"> The Matches</Button>
                 </Link>
-                <Link to="/dashboard">
-                    <Button color="inherit"> The dashboard</Button>
-                </Link>
+                {user ?
+                    <>
+
+                        <Link to="/dashboard">
+                            <Button color="inherit"> The dashboard</Button>
+                        </Link>
+                        <Button color="inherit"
+                            onClick={() => logoutHandler()}> Log Out</Button>
+                    </>
+                    :
+                    null
+                }
             </Toolbar>
 
 

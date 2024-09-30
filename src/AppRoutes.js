@@ -6,10 +6,10 @@ import Footer from './components/Header_footer/footer';
 import Home from './components/Home';
 import  SignIn from './components/Signin';
 
-const AppRoutes = () => {
+const AppRoutes = ({user}) => {
   return (
     <BrowserRouter>
-      <Header />
+      <Header user={user}/>
       <Routes>
         {/* Use 'element' instead of 'component' */}
         <Route path="/sign_in" element={<SignIn />} />  
