@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { app, auth ,signInWithEmailAndPassword} from '../../firebase';
+import {  auth ,signInWithEmailAndPassword} from '../../firebase';
 
 
 import { CircularProgress } from '@mui/material';
