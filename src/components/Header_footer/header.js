@@ -6,14 +6,21 @@ import { Link } from "react-router-dom";
 import manchester_city_logo from "../../Resources/images/logos/manchester_city_logo.png";
 import { CityLogo } from "../Utils/tools"
 
+import { signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Header = ({ user }) => {
-    const logoutHandler = () =>{
-        return(
-            <>
-                    
-            </>
-        )
+    const notify = () => toast("Successfully Logged out!");
+
+    const logoutHandler = () => {
+        signOut(auth).then(() => {
+            alert('signed out')
+
+        }).catch(err => {
+            alert(err)
+        })
     }
     return (
         <AppBar
