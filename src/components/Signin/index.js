@@ -3,11 +3,10 @@ import {  auth ,signInWithEmailAndPassword} from '../../firebase';
 
 
 import { CircularProgress } from '@mui/material';
-import { Redirect } from 'react-router-dom';
-
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { showErrorToast,showSuccessToast } from '../Utils/tools';
 
 const SignIn = (props) => {
     const [loading, setLoading] = useState(false)
@@ -38,13 +37,14 @@ const SignIn = (props) => {
             (userCredential) => {
                 // const user = userCredential.user;
                 // console.log(user)
+               showSuccessToast('Welcome back!!');
                 navigate('/dashboard');
             }
         ).catch((error) => {
             // const errorCode = error.code;   
             // const errorMessage = error.message;
             setLoading(false)
-            alert(error)
+            showErrorToast("either password or username is wrong")
         });
 
 
