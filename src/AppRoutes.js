@@ -7,6 +7,8 @@ import Home from './components/Home';
 import  SignIn from './components/Signin';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Dashboard from './components/Admin/Dashboard'
+import AuthGuard from './Hoc/Auth';
 
 
 const AppRoutes = ({user}) => {
@@ -15,6 +17,7 @@ const AppRoutes = ({user}) => {
       <Header user={user}/>
       <Routes>
         {/* Use 'element' instead of 'component' */}
+        <Route path="/dashboard" element={AuthGuard (Dashboard)} />  
         <Route path="/sign_in" element={<SignIn />} />  
         <Route path="/" element={<Home />} />  
       </Routes>
