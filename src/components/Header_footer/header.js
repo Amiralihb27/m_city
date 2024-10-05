@@ -6,30 +6,23 @@ import { Link } from "react-router-dom";
 import manchester_city_logo from "../../Resources/images/logos/manchester_city_logo.png";
 import { CityLogo } from "../Utils/tools"
 
-import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase';
+// import { signOut } from 'firebase/auth';
+// import { auth } from '../../firebase';
+import { logoutHandler } from "../Utils/tools";
 import { toast } from 'react-toastify';
 import { showErrorToast,showSuccessToast } from '../Utils/tools';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Header = ({ user }) => {
     const notify = () => toast("Successfully Logged out!");
-
-    const logoutHandler = () => {
-        signOut(auth).then(() => {
-            showSuccessToast('Good Bye!!!');
-
-        }).catch(err => {
-            showErrorToast(err.message);
-        })
-    }
+    
     return (
         <AppBar
             position="fixed"
             style={{
                 backgroundColor: "#98c5e9",
                 boxShadow: 'none',
-                padding: '0.625px 0',
+                padding: '0.625rem 0',
                 borderBottom: '0.125rem solid #00285e'
             }}>
 
