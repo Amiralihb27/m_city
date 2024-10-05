@@ -1,12 +1,17 @@
 import React from "react";
+import AdminLayout from "./AdminLayout";
 
 
 const Dashboard = (props) =>{
     console.log(props)
     return(
-        <>
-            Dashboard
-        </>
+        <AdminLayout title="Dashboard">
+            <div className="user_dashboard">
+                <div>
+                    This is your dashboard
+                </div>
+            </div>
+        </AdminLayout>
     )
 }
 
