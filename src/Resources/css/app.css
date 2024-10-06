@@ -195,13 +195,7 @@ footer .footer_discl {
     overflow: hidden; /* This prevents overflow if needed */
 }
 
-.stripe {
-    position: absolute; /* Necessary for the animation */
-    width: 100px; /* Width of each stripe */
-    height: 30px; /* Height of each stripe */
-    /* Optionally add some border or shadow for visibility */
-    border: 1px solid #000; /* Just to visualize the stripes better */
-}
+
 /* **************************** */
 .featured_stripes {
     position: relative

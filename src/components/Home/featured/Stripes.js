@@ -5,26 +5,26 @@ const stripesState = [
     {
         id: 1292751,
         background: '#98c5e9',
-        left: 200,
+        left: 250,
         rotate: 25,
-        top: -300,
+        top: -250,
         delay: 0
     },
     {
         id: 20392323,
         background: '#ffffff',
-        left: 500,
+        left: 550,
         rotate: 25,
-        top: -350,
-        delay: 0.2 // in seconds for Framer Motion
+        top: -300,
+        delay: 0.3 // in seconds for Framer Motion
     },
     {
         id: 2018261,
         background: '#98c5e9',
-        left: 800,
+        left: 850,
         rotate: 25,
-        top: -400,
-        delay: 0.4 // in seconds for Framer Motion
+        top: -350,
+        delay: 0.6 // in seconds for Framer Motion
     }
 ];
 
