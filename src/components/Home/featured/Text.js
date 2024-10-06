@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { easePolyOut } from 'd3-ease';
+import FeaturedPlayer from '../../../Resources/images/featured_player.png';
 
 const Text = () => {
     const animateFirstText = () => (
@@ -18,7 +19,7 @@ const Text = () => {
 
     const animateSecondText = () => (
         <motion.div
-            className="featured_first"
+            className="featured_second"
             initial={{ opacity: 0, x: 503, y: 550 }}
             animate={{ opacity: 1, x: 267, y: 550 }}
             transition={{ delay: 0.3, duration: 1, ease: easePolyOut }}
@@ -26,6 +27,17 @@ const Text = () => {
         >
             ChampioShip
         </motion.div>
+    )
+
+    const animatePlayer = () => (
+        <motion.div
+            className="featured_player"
+            initial={{ opacity: 0,x: 503, y: 550 }}
+            animate={{ opacity: 1 , x: 550, y: 150}}
+            transition={{ delay: 0.6, duration: 1, ease: easePolyOut }}
+            style={{ zIndex: 95 ,background:`url(${FeaturedPlayer}) no-repeat`}}
+        />
+        
     )
     const animateNumber = () => (
 
@@ -44,6 +56,8 @@ const Text = () => {
 
     return (
         <div className='featured_text'>
+
+            {animatePlayer()}
             {animateNumber()}
             {animateFirstText()}
             {animateSecondText()}
