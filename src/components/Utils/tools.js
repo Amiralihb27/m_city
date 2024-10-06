@@ -4,8 +4,12 @@ import mcitylogo from "../../Resources/images/logos/manchester_city_logo.png";
 import { toast } from 'react-toastify';
 import {auth} from '../../firebase';
 import { signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
-export const CityLogo = (props) => {
+
+
+
+export const CityLogo = (props) => {    
     const template = <div
         className='img_cover'
         style={{
@@ -41,11 +45,13 @@ export const showSuccessToast = (msg)=>{
     })
 }
 
-export  const logoutHandler = () => {
-    signOut(auth).then(() => {
-        showSuccessToast('Good Bye!!!');
-
-    }).catch(err => {
-        showErrorToast(err.message);
-    })
-}
+export const logoutHandler = (navigate) => {
+    signOut(auth)
+        .then(() => {
+            showSuccessToast('Good Bye!!!');
+            navigate('/');  // Navigate to the home page
+        })
+        .catch(err => {
+            showErrorToast(err.message);
+        });
+};

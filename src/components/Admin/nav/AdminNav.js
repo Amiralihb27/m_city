@@ -4,9 +4,11 @@ import { ListItem } from '@mui/material';
 import { auth } from '../../../firebase';
 import { showErrorToast, showSuccessToast, logoutHandler } from '../../Utils/tools';
 import AdminLayout from '../AdminLayout';
+import { useNavigate } from 'react-router-dom';
 
 
 const AdminNav = (props) => {
+    const navigate = useNavigate();
 
     const links = [
         {
@@ -33,7 +35,7 @@ const AdminNav = (props) => {
             {renderItems()}
             <Link>
                 <ListItem button className='admin_nav_link'
-                    onClick={() => (logoutHandler())}>
+                    onClick={() => (logoutHandler(navigate))}>
                     Log out
                 </ListItem>
             </Link>

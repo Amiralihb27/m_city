@@ -12,10 +12,11 @@ import { logoutHandler } from "../Utils/tools";
 import { toast } from 'react-toastify';
 import { showErrorToast,showSuccessToast } from '../Utils/tools';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ user }) => {
     const notify = () => toast("Successfully Logged out!");
-    
+    const navigate = useNavigate();
     return (
         <AppBar
             position="fixed"
@@ -55,7 +56,7 @@ const Header = ({ user }) => {
                             <Button color="inherit"> The dashboard</Button>
                         </Link>
                         <Button color="inherit"
-                            onClick={() => logoutHandler()}> Log Out</Button>
+                            onClick={() => logoutHandler(navigate)}> Log Out</Button>
                     </>
                     :
                     null
