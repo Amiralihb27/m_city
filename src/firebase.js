@@ -25,13 +25,16 @@ const DB = getFirestore(app);
 // Adding matches to Firestore
 
 
-/* !!!! use the code below only once so that you add the datas only one time if they dont exist. !!! */
 const matchesCollection = collection(DB, 'matches');
-const playersCollection = collection(DB , 'players');
-const positionsCollection = collection(DB , 'positions');
-const promotionsCollection = collection(DB , 'promotions');
-const teamsCollection = collection(DB , 'teams');
+const playersCollection = collection(DB, 'players');
+const positionsCollection = collection(DB, 'positions');
+const promotionsCollection = collection(DB, 'promotions');
+const teamsCollection = collection(DB, 'teams');
 
+/* !!!! use the code below and uncomment it only once
+so that you add the datas only one time if they dont exist. !!!! */
+
+/* Matches */
 
 // cityDB.matches.forEach(async match => {
 //   try {
@@ -42,6 +45,9 @@ const teamsCollection = collection(DB , 'teams');
 //   }
 // });
 
+
+/* Players */
+
 // cityDB.players.forEach(async player => {
 //   try {
 //     await addDoc(playersCollection, player);
@@ -51,6 +57,7 @@ const teamsCollection = collection(DB , 'teams');
 //   }
 // });
 
+/* Positions */
 
 // cityDB.positions.forEach(async position => {
 //   try {
@@ -61,6 +68,9 @@ const teamsCollection = collection(DB , 'teams');
 //   }
 // });
 
+
+/* Promotions */
+
 // cityDB.promotions.forEach(async promotion => {
 //   try {
 //     await addDoc(promotionsCollection, promotion);
@@ -70,14 +80,24 @@ const teamsCollection = collection(DB , 'teams');
 //   }
 // });
 
-cityDB.teams.forEach(async team => {
-  try {
-    await addDoc(teamsCollection, team);
-    console.log('Team added successfully:', team);
-  } catch (error) {
-    console.error('Error adding team:', error);
-  }
-});
+
+/*Teams */
+
+// cityDB.teams.forEach(async team => {
+//   try {
+//     await addDoc(teamsCollection, team);
+//     console.log('Team added successfully:', team);
+//   } catch (error) {
+//     console.error('Error adding team:', error);
+//   }
+// });
 
 // Export auth and signInWithEmailAndPassword
-export { app, auth, signInWithEmailAndPassword };
+export {
+  app, auth, signInWithEmailAndPassword,
+  matchesCollection,
+  playersCollection,
+  positionsCollection,
+  promotionsCollection,
+  teamsCollection
+};

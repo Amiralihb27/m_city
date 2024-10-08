@@ -191,7 +191,7 @@ footer .footer_discl {
 
 .featured_stripes {
     position: relative; /* This allows absolute positioning of children */
-    height: 700px; /* Adjust this height to accommodate the animated positions */
+    height: 800px; /* Adjust this height to accommodate the animated positions */
     overflow: hidden; /* This prevents overflow if needed */
 }
 
