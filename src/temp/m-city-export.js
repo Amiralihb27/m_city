@@ -7,7 +7,7 @@ export const cityDB = {
             "final": "No",
             "local": "Burnley",
             "localThmb": "burnley",
-            "referee": "Marcus Red",
+            "referee": "Marcus Red",    
             "result": "n/a",
             "resultAway": "-",
             "resultLocal": "-",

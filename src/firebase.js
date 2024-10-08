@@ -28,6 +28,10 @@ const DB = getFirestore(app);
 /* !!!! use the code below only once so that you add the datas only one time if they dont exist. !!! */
 const matchesCollection = collection(DB, 'matches');
 const playersCollection = collection(DB , 'players');
+const positionsCollection = collection(DB , 'positions');
+const promotionsCollection = collection(DB , 'promotions');
+const teamsCollection = collection(DB , 'teams');
+
 
 // cityDB.matches.forEach(async match => {
 //   try {
@@ -43,9 +47,37 @@ const playersCollection = collection(DB , 'players');
 //     await addDoc(playersCollection, player);
 //     console.log('Player added successfully:', player);
 //   } catch (error) {
-//     console.error('Error adding match:', error);
+//     console.error('Error adding player:', error);
 //   }
 // });
+
+
+// cityDB.positions.forEach(async position => {
+//   try {
+//     await addDoc(positionsCollection, position);
+//     console.log('Position added successfully:', position);
+//   } catch (error) {
+//     console.error('Error adding position:', error);
+//   }
+// });
+
+// cityDB.promotions.forEach(async promotion => {
+//   try {
+//     await addDoc(promotionsCollection, promotion);
+//     console.log('Promotion added successfully:', promotion);
+//   } catch (error) {
+//     console.error('Error adding promotion:', error);
+//   }
+// });
+
+cityDB.teams.forEach(async team => {
+  try {
+    await addDoc(teamsCollection, team);
+    console.log('Team added successfully:', team);
+  } catch (error) {
+    console.error('Error adding team:', error);
+  }
+});
 
 // Export auth and signInWithEmailAndPassword
 export { app, auth, signInWithEmailAndPassword };
