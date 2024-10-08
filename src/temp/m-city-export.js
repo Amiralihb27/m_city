@@ -1,4 +1,4 @@
-export const cityDb = {
+export const cityDB = {
     matches: [
         {
             "away": "Man.City",
