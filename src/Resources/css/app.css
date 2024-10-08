@@ -275,31 +275,37 @@ footer .footer_discl {
             MATCHES BLOCK
 ===============================*/
 
-.match_block .match_date{
-    color:#ffffff;
-    font-size:18px;
+.match_block .match_date {
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.match_block .match_wrapper {
+    display: flex;
+    flex-direction: column;
 }
 
 .match_block .match_wrapper .match_top,
 .match_block .match_wrapper .match_bottom {
     display: flex;
-}
-.match_block .match_wrapper .match_bottom {
+    align-items: center; /* Aligns items vertically */
     margin-top: 5px;
 }
 
 .match_block .match_wrapper .match_top .left,
 .match_block .match_wrapper .match_bottom .left {
-    background: #ffffff; 
+    background: #ffffff;
     font-family: 'Righteous', cursive;
-    flex-grow: 1;
+    flex-basis: 35%; /* Ensures both left sides take up equal width */
     margin-right: 5px;
     padding: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .match_block .match_wrapper .match_top .left div,
 .match_block .match_wrapper .match_bottom .left div {
-    float:left
+    float: left;
 }
 
 .match_block .match_wrapper .match_top .left .icon,
@@ -307,23 +313,24 @@ footer .footer_discl {
     width: 50px;
     height: 50px;
     background-size: cover !important;
+    margin-right: 10px; /* Adds spacing between icon and team name */
 }
+
 .match_block .match_wrapper .match_top .left .team_name,
 .match_block .match_wrapper .match_bottom .left .team_name {
     font-size: 30px;
     padding: 6px 10px;
 }
 
-
 .match_block .match_wrapper .match_top .right,
-.match_block .match_wrapper .match_bottom .right { 
+.match_block .match_wrapper .match_bottom .right {
     background: #0e1731;
     width: 70px;
     color: #ffffff;
     font-size: 50px;
     text-align: center;
     padding-top: 6px;
-} 
+}
 
 .match_box_big {
     width:100%;
