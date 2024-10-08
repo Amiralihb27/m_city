@@ -25,12 +25,23 @@ const DB = getFirestore(app);
 // Adding matches to Firestore
 
 
-// const matchesCollection = collection(DB, 'matches');
+/* !!!! use the code below only once so that you add the datas only one time if they dont exist. !!! */
+const matchesCollection = collection(DB, 'matches');
+const playersCollection = collection(DB , 'players');
 
 // cityDB.matches.forEach(async match => {
 //   try {
 //     await addDoc(matchesCollection, match);
 //     console.log('Match added successfully:', match);
+//   } catch (error) {
+//     console.error('Error adding match:', error);
+//   }
+// });
+
+// cityDB.players.forEach(async player => {
+//   try {
+//     await addDoc(playersCollection, player);
+//     console.log('Player added successfully:', player);
 //   } catch (error) {
 //     console.error('Error adding match:', error);
 //   }
