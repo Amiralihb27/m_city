@@ -1,37 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Slide } from 'react-awesome-reveal';
-import { getDocs } from 'firebase/firestore'; // Import the correct method
-import { matchesCollection } from '../../../firebase'; // Ensure this is the correct reference to your collection
+import { getDocs } from 'firebase/firestore';
+import { matchesCollection } from '../../../firebase';
 import MatchesBlock from '../../Utils/matches_block';
+import { CircularProgress } from '@mui/material'; // Import CircularProgress
+
 const Blocks = () => {
     const [matches, setMatches] = useState([]);
+    const [loading, setLoading] = useState(true); // Add loading state
 
     useEffect(() => {
         if (matches.length === 0) {
-            console.log(matches.length);
-            // Logging here will still show the old state
-            console.log("Matches before fetching data:", matches);
-            console.log("Fetching data...");
-            getDocs(matchesCollection) // Use getDocs() instead of .get()
+            console.log("Fetching data...");    
+            getDocs(matchesCollection)
                 .then(snapshot => {
-                    console.log(snapshot);
                     const fetchedMatches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    console.log(fetchedMatches);
-                    // Set the matches state
                     setMatches(fetchedMatches);
-                    console.log(matches.length);
-                    console.log(matches);
+                    setLoading(true); // Set loading to false once data is fetched
                 })
                 .catch(error => {
                     console.error("Error fetching matches:", error);
+                    setLoading(false); // Set loading to false even if there's an error
                 });
         }
     }, [matches]);
 
+    const showMatches = (matches) => {
+        if (loading) {
+            return (
+                <div >
+                    <CircularProgress /> {/* CircularProgress for loading */}
+                    <div style={{visibility:'hidden'}}>
+                        Loading
+                    </div>
+                </div>
+                
+            );
+        }
 
-    const showMatches = (matches) => (
-        matches ?
-            matches.map((match) => (
+        if (matches && matches.length > 0) {
+            return matches.map(match => (
                 <Slide bottom key={match.id} className='item' triggerOnce>
                     <div>
                         <div className='container'>
@@ -39,11 +47,11 @@ const Blocks = () => {
                         </div>
                     </div>
                 </Slide>
-            ))
-            :
-            null
-    )
-
+            ));
+        } else {
+            return <div>No matches available.</div>; // Show message if no matches
+        }
+    };
 
     return (
         <div className='home_matches'>
