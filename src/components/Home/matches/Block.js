@@ -25,17 +25,23 @@ const Blocks = () => {
         }
     }, [matches]);
 
+    const showLoading = () =>{
+        return (
+            <div >
+                <CircularProgress /> {/* CircularProgress for loading */}
+                <div style={{visibility:'hidden'}}>
+                    Loading
+                </div>
+            </div>
+            
+        );
+    }
+
     const showMatches = (matches) => {
         if (loading) {
-            return (
-                <div >
-                    <CircularProgress /> {/* CircularProgress for loading */}
-                    <div style={{visibility:'hidden'}}>
-                        Loading
-                    </div>
-                </div>
-                
-            );
+            return(
+                showLoading()
+            )
         }
 
         if (matches && matches.length > 0) {
@@ -49,7 +55,11 @@ const Blocks = () => {
                 </Slide>
             ));
         } else {
-            return <div>No matches available.</div>; // Show message if no matches
+            // return <div>No matches available.</div>; // Show message if no matches
+            //because we already have matches we shoulddnt return this.instead we return the loading screen.
+            return(
+                showLoading()
+            )
         }
     };
 
