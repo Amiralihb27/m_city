@@ -16,7 +16,7 @@ const Blocks = () => {
                 .then(snapshot => {
                     const fetchedMatches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     setMatches(fetchedMatches);
-                    setLoading(true); // Set loading to false once data is fetched
+                    setLoading(false); // Set loading to false once data is fetched
                 })
                 .catch(error => {
                     console.error("Error fetching matches:", error);
