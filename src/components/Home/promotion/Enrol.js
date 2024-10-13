@@ -18,15 +18,15 @@ const Enroll = () => {
                 .email('Invalid email address')   // Error for invalid email
                 .required('The email is required'), // Error for empty email
         }),
-        onSubmit: (values) => {
+        onSubmit: (values ,{resetForm}) => {
             setLoading(true);
-            submitForm(values.email);
+            submitForm(values.email,resetForm);
         },
         validateOnChange: false,  // Do not validate onChange
         validateOnBlur: false,    // Do not validate onBlur
     });
 
-    const submitForm = async (email) => {
+    const submitForm = async (email , resetForm) => {
         try {
             const q = query(promotionsCollection, where("email", "==", email));
             const querySnapshot = await getDocs(q);
@@ -37,9 +37,11 @@ const Enroll = () => {
                 await addDoc(promotionsCollection, { email });
                 showSuccessToast('Congratulations!!!');
             }
+        resetForm();
         } catch (error) {
             console.error("Error with Firestore operations:", error);
         } finally {
+            
             setLoading(false); // Ensure loading is disabled after async operation
         }
     };
