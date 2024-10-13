@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ListItem } from '@mui/material';
 import { auth } from '../../../firebase';
 import { showErrorToast, showSuccessToast, logoutHandler } from '../../Utils/tools';
-import AdminLayout from '../AdminLayout';
+import AdminLayout from '../../../Hoc/AdminLayout';
 import { useNavigate } from 'react-router-dom';
 
 

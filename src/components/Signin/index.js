@@ -45,7 +45,7 @@ const SignIn = (props) => {
             // const errorCode = error.code;   
             // const errorMessage = error.message;
             setLoading(false)
-            showErrorToast("either password or username is wrong")
+            showErrorToast("Either password or username is wrong")
         });
 
 
