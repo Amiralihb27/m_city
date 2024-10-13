@@ -38,7 +38,7 @@ const HomeCards = (props) => {
     const showAnimateCards = () => (
         cards.map((card, i) => {
             const foundPlayer = findPlayer(card.playerName);
-            console.log(foundPlayer);
+            // console.log(foundPlayer);
             return (
 
                 <motion.div
@@ -61,11 +61,11 @@ const HomeCards = (props) => {
     );
 
     const findPlayer = (playerName) => {
-        console.log(playerName);
+        // console.log(playerName);
         return cityDB.players.find((player) => {
             if (playerName.toLowerCase() === player.name.toLowerCase()) {
-                console.log(player);
-                console.log("found");
+                // console.log(player);
+                // console.log("found");
                 return true; // This will cause `find` to return the matched player
             }
             return false;

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import {  auth ,signInWithEmailAndPassword} from '../../firebase';
+import { auth, signInWithEmailAndPassword } from '../../firebase';
 
 
 import { CircularProgress } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { showErrorToast,showSuccessToast } from '../Utils/tools';
+import { showErrorToast, showSuccessToast } from '../Utils/tools';
 import { Navigate } from 'react-router-dom';
 
 const SignIn = (props) => {
@@ -38,7 +38,7 @@ const SignIn = (props) => {
             (userCredential) => {
                 // const user = userCredential.user;
                 // console.log(user)
-               showSuccessToast('Welcome back!!');
+                showSuccessToast('Welcome back!!');
                 navigate('/dashboard');
             }
         ).catch((error) => {
@@ -51,57 +51,59 @@ const SignIn = (props) => {
 
     };
 
-    if(!props.user){
-        return(
-           <div className="container">
-               <div className="signin_wrapper" style={{ margin: '100px' }}>
-   
-                   <form onSubmit={formik.handleSubmit}>
-                       <h2>Please login</h2>
-                       <input
-                           name="email"
-                           placeholder="Email"
-                           onChange={formik.handleChange}
-                           onBlur={formik.handleBlur}
-                           value={formik.values.email}
-                           className={formik.touched.email && formik.errors.email ? 'input_error' : ''}
-                       />
-                       {formik.touched.email && formik.errors.email &&
-                           <div className="error_label">
-                               {formik.errors.email}
-                           </div>
-                       }
-   
-   
-                       <input
-                           name="password"
-                           type="password"
-                           placeholder='password'
-                           onChange={formik.handleChange}
-                           onBlur={formik.handleBlur}
-                           value={formik.values.password}
-                           className={formik.touched.password && formik.errors.password ? 'input_error' : ''}
-                       />
-                       {formik.touched.password && formik.errors.password &&
-                           <div className="error_label">
-                               {formik.errors.password}
-                           </div>
-                       }
-   
-                       {loading ?
-                           <CircularProgress color="secondary" className="progress" />
-                           :
-                           <button type="submit">Log in</button>
-                       }
-                   </form>
-   
-               </div>
-           </div>
-       )
-    } else{
-       return <Navigate to='/dashboard' />
+    if (!props.user) {
+        return (
+            <div className="container">
+                <div className="signin_wrapper" style={{ margin: '100px' }}>
+
+                    <form onSubmit={formik.handleSubmit}>
+                        <h2>Please login</h2>
+                        <input
+                            name="email"
+                            placeholder="Email"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.email}
+                            className={formik.touched.email && formik.errors.email ? 'input_error' : ''}
+                        />
+                        {formik.touched.email && formik.errors.email &&
+                            <div className="error_label">
+                                {formik.errors.email}
+                            </div>
+                        }
+
+
+                        <input
+                            name="password"
+                            type="password"
+                            placeholder='password'
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.password}
+                            className={formik.touched.password && formik.errors.password ? 'input_error' : ''}
+                        />
+                        {formik.touched.password && formik.errors.password &&
+                            <div className="error_label">
+                                {formik.errors.password}
+                            </div>
+                        }
+
+                        {loading ?
+                            <CircularProgress color="secondary" className="progress" />
+                            :
+                            <button type="submit" style={{
+                                cursor: 'pointer'
+                            }}>Log in</button>
+                        }
+                    </form>
+
+                </div>
+            </div>
+        )
+    } else {
+        return <Navigate to='/dashboard' />
     }
-    
+
 
 }
 

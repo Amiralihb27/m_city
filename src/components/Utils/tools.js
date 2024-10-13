@@ -35,13 +35,14 @@ export const CityLogo = (props) => {
 
 export const showErrorToast = (msg) => {
     toast.error(msg, {
-        position: "top-left"
+        position: "top-left",
+        theme: "colored"
     })
 }
 
 export const showSuccessToast = (msg) => {
     toast.success(msg, {
-        position: "top-left"
+        position: "top-left", theme: "colored"
     })
 }
 
@@ -60,25 +61,25 @@ export const Tag = (props) => {
 
     const template = <div
         style={{
-        background:props.bck ? props.bck : '#FFFFFF',
-        fontSize:props.size? props.size : '1rem',
-        color: props.color? props.color : '#000000',
-        padding:'0.3125rem 0.625rem',
-        display:'inline-block',
-        fontFamily:'Righteous',
-        //if you wana overwrite the defaults
-        ...props.add
+            background: props.bck ? props.bck : '#FFFFFF',
+            fontSize: props.size ? props.size : '1rem',
+            color: props.color ? props.color : '#000000',
+            padding: '0.3125rem 0.625rem',
+            display: 'inline-block',
+            fontFamily: 'Righteous',
+            //if you wana overwrite the defaults
+            ...props.add
         }}>
         {props.children}
     </div>
 
-    if(props.link){
-        return(
+    if (props.link) {
+        return (
             <Link to={props.linkTo}>
                 {template}
             </Link>
         )
-    }else{
-        return(template)
+    } else {
+        return (template)
     }
 }

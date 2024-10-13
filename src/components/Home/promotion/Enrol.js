@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Fade } from "react-awesome-reveal";
 import { CircularProgress } from "@mui/material";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
 import { showErrorToast, showSuccessToast } from '../../Utils/tools';
-import { Navigate } from 'react-router-dom';
-import { promotionsCollection } from '../../../firebase'
+import { promotionsCollection } from '../../../firebase';
+import { query, where, getDocs, addDoc } from "firebase/firestore";
 
 const Enroll = () => {
     const [loading, setLoading] = useState(false);
@@ -17,15 +15,35 @@ const Enroll = () => {
         },
         validationSchema: Yup.object({
             email: Yup.string()
-                .email('Invalid email address')
-                .required('The email is required'), 
+                .email('Invalid email address')   // Error for invalid email
+                .required('The email is required'), // Error for empty email
         }),
         onSubmit: (values) => {
-            setLoading(true)
-            console.log(values)
+            setLoading(true);
+            submitForm(values.email);
         },
-        validateOnChange: true,
-    })
+        validateOnChange: false,  // Do not validate onChange
+        validateOnBlur: false,    // Do not validate onBlur
+    });
+
+    const submitForm = async (email) => {
+        try {
+            const q = query(promotionsCollection, where("email", "==", email));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                showErrorToast("Sorry, you are already on the list");
+            } else {
+                await addDoc(promotionsCollection, { email });
+                showSuccessToast('Congratulations!!!');
+            }
+        } catch (error) {
+            console.error("Error with Firestore operations:", error);
+        } finally {
+            setLoading(false); // Ensure loading is disabled after async operation
+        }
+    };
+
     return (
         <div className="enroll_wrapper">
             <form onSubmit={formik.handleSubmit}>
@@ -33,34 +51,39 @@ const Enroll = () => {
                     Enter your Email
                 </div>
                 <div className="enroll_input">
-
                     <input
                         name="email"
                         placeholder="Enter your email"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.email}
-                        className={formik.touched.email && formik.errors.email ? 'input_error' : ''}
+                        onChange={(e) => {
+                            formik.setFieldTouched('email', false);  // Remove error when typing
+                            formik.handleChange(e);
+                        }}
+                        value={formik.values.email}       
+                        className={formik.errors.email && formik.touched.email ? 'input_error' : ''}
                     />
-                    {formik.touched.email && formik.errors.email &&
+                    {formik.errors.email && formik.touched.email && (  // Show errors on form submit
                         <div className="error_label">
                             {formik.errors.email}
                         </div>
-                    }
+                    )}
                 </div>
-                {loading ?
+                {loading ? (
                     <CircularProgress color="secondary" className="progress" />
-                    :
-                    <button type="submit">Enroll</button>
-                }
-
-                <div className="enroll_disc1">
-                fdsf sdkfdsjof j fdjsdfj df;jersey
-                sdalkdn nsfwerqweo jqwj qwojqwer pouoifu
+                ) : (
+                    <button
+                        type="submit"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => formik.setTouched({ email: true })}  // Mark the input as touched when submitting
+                    >
+                        Enroll
+                    </button>
+                )}
+                <div className="enroll_discl">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis non ullamcorper nulla. Etiam tempor, nibh
                 </div>
             </form>
         </div>
-    )
-}
+    );
+};
 
 export default Enroll;
