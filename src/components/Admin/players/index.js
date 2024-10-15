@@ -11,7 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Link } from 'react-router-dom';
-import {CircularProgress} from "@mui/material";
+import { CircularProgress } from "@mui/material";
 
 
 const AdminPlayers = () => {
@@ -68,6 +68,16 @@ const AdminPlayers = () => {
     return (
 
         <AdminLayout title="The Players">
+            <div className='mb-5'>
+                <Button
+                    variant="contained"
+                    style={{ backgroundColor: '#67D7DB' }}
+                    component={Link}
+                    to='/admin_players/add_player'
+                >
+                    Add Player
+                </Button>
+            </div>
             {players && players.length > 0 ? (
                 <Paper className="mb-5">
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -107,13 +117,16 @@ const AdminPlayers = () => {
             )}
             <Button
                 variant="contained"
-                color='primary'
+                // color='primary'
                 onClick={loadMorePlayer}
-                disabled={loading}>
+                disabled={loading}
+                style={{
+                    backgroundColor: '#67B2DB'
+                }}>
                 Load more
             </Button>
             <div className="admin_progress">
-                {loading ? <CircularProgress thickness={5} ></CircularProgress>:null}
+                {loading ? <CircularProgress thickness={5} ></CircularProgress> : null}
             </div>
         </AdminLayout>
     )

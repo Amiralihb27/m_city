@@ -9,25 +9,42 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dashboard from './components/Admin/Dashboard';
 import AuthGuard from './Hoc/Auth'; // Import the AuthGuard
-import AdminPlayers from './components/Admin/players'
+import AdminPlayers from './components/Admin/players';
+import AddEditPlayers from './components/Admin/players/addEditPlayers';
 
 const AppRoutes = ({ user }) => {
   return (
     <BrowserRouter>
-      <Header user={user} />
-      
+      <Header user={user} />  
+
       <Routes>
-      <Route
+
+
+        <Route
+          path="/admin_players/edit_player/:playerid"
+          element={
+            <AuthGuard component={AddEditPlayers} />
+          }
+        />
+        <Route
+          path="/admin_players/add_player"
+          element={
+            <AuthGuard component={AddEditPlayers} />
+          }
+        />
+
+
+        <Route
           path="/admin_players"
           element={
-            <AuthGuard component={AdminPlayers}/>
+            <AuthGuard component={AdminPlayers} />
           }
         />
         {/* Protect the dashboard route */}
         <Route
           path="/dashboard"
           element={
-            <AuthGuard component={Dashboard}/>
+            <AuthGuard component={Dashboard} />
           }
         />
         <Route path="/sign_in" element={<SignIn whereTo={<Dashboard />} user={user} />} />
