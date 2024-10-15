@@ -6,7 +6,7 @@ import { showErrorToast, showSuccessToast, textErrorHelper, selectErrorHelper, s
 import { Button, FormControl, MenuItem, Select, TextField } from '@mui/material';
 import { playersCollection } from "../../../firebase";
 import { useParams } from "react-router-dom";
-
+import CustomTextField from "./customTextField";
 
 const AddEditPlayers = (props) => {
 
@@ -16,7 +16,7 @@ const AddEditPlayers = (props) => {
         number: '',
         position: ''
     }
-    const [fomrType, setFormType] = useState('');
+    const [formType, setFormType] = useState('');
     const [values, setValues] = useState(defaultValues);
     const { playerid } = useParams();
 
@@ -50,57 +50,43 @@ const AddEditPlayers = (props) => {
 
     }, [playerid])
 
-    console.log(fomrType, values)
+    console.log(formType, values)
 
     return (
         <>
-            <AdminLayout title={fomrType === 'add' ? 'Add Player' : 'Edit Player'}>
-                image
+
+            <AdminLayout title={formType === 'add' ? 'Add Player' : 'Edit Player'}>
                 <hr />
                 <h4>Player info</h4>
-                <div className="mb-5">
-                    <FormControl>
-                        <TextField
-                            id="name"
-                            name="name"
-                            variant="outlined"
-                            placeholder="Add firstname"
-                            {...formik.getFieldProps('name')}
-                            {...textErrorHelper(formik, 'name')}
-                        />
+                <CustomTextField
+                    id="name"
+                    name="name"
+                    placeholder="firstname"
+                    formik={formik}
+                />
+                <CustomTextField
+                    id="lastname"
+                    name="lastname"
+                    placeholder="lastname"
+                    formik={formik}
+                />
 
-                    </FormControl>
-                </div>
 
-                <div className="mb-5">
-                    <FormControl>
-                        <TextField
-                            id="lastname"
-                            name="lastname"
-                            variant="outlined"
-                            placeholder="Add lastname"
-                            {...formik.getFieldProps('lastname')}
-                            {...textErrorHelper(formik, 'lastname')}
-                        />
+                <CustomTextField
+                    type="number"
+                    id="number"
+                    name="number"
+                    placeholder="number"
+                    formik={formik}
+                />
 
-                    </FormControl>
-                </div>
+                {/* Add other fields like position if necessary */}
 
-                <div className="mb-5">
-                    <FormControl>
-                        <TextField
-                            type="number"
-                            id="number"
-                            name="number"
-                            variant="outlined"
-                            placeholder="Add number"
-                            {...formik.getFieldProps('number')}
-                            {...textErrorHelper(formik, 'number')}
-                        />
-
-                    </FormControl>
-                </div>
+                <Button variant="contained" color="primary" type="submit">
+                    {formType === 'add' ? 'Add Player' : 'Update Player'}
+                </Button>
             </AdminLayout>
+
         </>
     )
 }
