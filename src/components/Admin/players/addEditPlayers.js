@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import AdminLayout from "../../../Hoc/AdminLayout";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { showErrorToast, showSuccessToast } from "../../Utils/tools";
-import { Button, FormComtrol, MenuItem, Select, TextField } from '@mui/material';
+import { showErrorToast, showSuccessToast, textErrorHelper, selectErrorHelper, selectIsError } from "../../Utils/tools";
+import { Button, FormControl, MenuItem, Select, TextField } from '@mui/material';
 import { playersCollection } from "../../../firebase";
 import { useParams } from "react-router-dom";
 
@@ -16,7 +16,7 @@ const AddEditPlayers = (props) => {
         number: '',
         position: ''
     }
-    const [fomrType,setFormType] = useState('');
+    const [fomrType, setFormType] = useState('');
     const [values, setValues] = useState(defaultValues);
     const { playerid } = useParams();
 
@@ -39,29 +39,68 @@ const AddEditPlayers = (props) => {
     })
 
 
-    useEffect(()=>{
-        if(playerid){
+    useEffect(() => {
+        if (playerid) {
             setFormType('edit');
             setValues('just a test')
-        }else{
+        } else {
             setFormType('add');
             setValues(defaultValues)
         }
 
-    },[playerid])
+    }, [playerid])
 
-    console.log(fomrType,values)
+    console.log(fomrType, values)
 
     return (
         <>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            content
+            <AdminLayout title={fomrType === 'add' ? 'Add Player' : 'Edit Player'}>
+                image
+                <hr />
+                <h4>Player info</h4>
+                <div className="mb-5">
+                    <FormControl>
+                        <TextField
+                            id="name"
+                            name="name"
+                            variant="outlined"
+                            placeholder="Add firstname"
+                            {...formik.getFieldProps('name')}
+                            {...textErrorHelper(formik, 'name')}
+                        />
+
+                    </FormControl>
+                </div>
+
+                <div className="mb-5">
+                    <FormControl>
+                        <TextField
+                            id="lastname"
+                            name="lastname"
+                            variant="outlined"
+                            placeholder="Add lastname"
+                            {...formik.getFieldProps('lastname')}
+                            {...textErrorHelper(formik, 'lastname')}
+                        />
+
+                    </FormControl>
+                </div>
+
+                <div className="mb-5">
+                    <FormControl>
+                        <TextField
+                            type="number"
+                            id="number"
+                            name="number"
+                            variant="outlined"
+                            placeholder="Add number"
+                            {...formik.getFieldProps('number')}
+                            {...textErrorHelper(formik, 'number')}
+                        />
+
+                    </FormControl>
+                </div>
+            </AdminLayout>
         </>
     )
 }
