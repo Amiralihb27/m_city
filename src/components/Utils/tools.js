@@ -91,11 +91,12 @@ export const textErrorHelper = (formik,values) => ({
 
 export const selectErrorHelper = (formik,values) => {
     if(formik.errors[values] && formik.touched[values]){
+        console.log(formik.errors)
         return (<FormHelperText>{formik.errors[values]}</FormHelperText>)
     }
     return false;
 }
 
-export const  selectIsError = (formik,values) => {
+export const  selectHasError = (formik,values) => {
     return formik.errors[values] && formik.touched[values];
 }
