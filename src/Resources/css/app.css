@@ -251,6 +251,62 @@ footer .footer_discl {
 }
 
 /*=============================
+           FILE UPLOADER
+===============================*/
+.file-uploader {
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.upload-container {
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 30px;
+    background-color: #f8f8f8;
+}
+
+.input-container {
+   margin: 5px 25px 5px 5px;
+}
+
+.file-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress-spinner {
+    margin-right: 10px;
+}
+
+.progress-text {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Optional: Hover effects */
+.upload-container:hover {
+    border-color: #999;
+}
+
+.file-input:hover {
+    border-color: #999;
+}
+
+/*=============================
             MATCHES HOME
 ===============================*/
 

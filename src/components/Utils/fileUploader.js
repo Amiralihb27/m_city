@@ -1,88 +1,100 @@
-import React, { Component } from 'react';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'; // Firebase Storage imports
-import { CircularProgress } from  '@mui/material';
+import React, { useState } from 'react';
+import { getStorage } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { CircularProgress } from '@mui/material';
+import { app } from '../../firebase';
+import { showSuccessToast } from './tools';
 
-class FileUploaderComponent extends Component {
+const FileUploaderComponent = ({ dir, onUploadSuccess }) => {
+    const [isUploading, setIsUploading] = useState(false);
+    const [fileURL, setFileURL] = useState('');
+    const [uploadProgress, setUploadProgress] = useState(0);
 
-    state = { 
-        name: '', // Name of the file
-        isUploading: false,
-        fileURL: '' // URL of the uploaded file
-    };
-
-    handleFileChange = (event) => {
+    const handleFileChange = (event) => {
         const file = event.target.files[0];
-        if (file) {
-            this.handleUploadStart();
-            this.uploadFile(file);
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            alert('Please upload an image file');
+            return;
         }
+
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            alert('File size must be less than 5MB');
+            return;
+        }
+
+        uploadFile(file);
     };
 
-    handleUploadStart = () => {
-        this.setState({ isUploading: true });
-    };
+    const uploadFile = (file) => {
+        setIsUploading(true);
+        setUploadProgress(0);
 
-    handleUploadError = (error) => {
-        console.error(error);
-        this.setState({ isUploading: false });
-    };
-
-    handleUploadSuccess = (filename, downloadURL) => {
-        this.setState({
-            name: filename,
-            fileURL: downloadURL,
-            isUploading: false
-        });
-    };
-
-    uploadFile = (file) => {
-        const storage = getStorage(); // Initialize Firebase Storage
-        const storageRef = ref(storage, `${this.props.dir}/${file.name}`); // Create a reference to the file location
-
-        const uploadTask = uploadBytesResumable(storageRef, file); // Start the file upload
+        const storage = getStorage(app);
+        const timestamp = new Date().getTime();
+        const uniqueFilename = `${timestamp}_${file.name}`;
+        const storageRef = ref(storage, `${dir}/${uniqueFilename}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadTask.on(
             'state_changed',
             (snapshot) => {
-                // Optional: handle progress if you want
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`Upload is ${progress}% done`);
+                setUploadProgress(progress);
             },
             (error) => {
-                // Handle error during upload
-                this.handleUploadError(error);
+                console.error('Upload error:', error);
+                setIsUploading(false);
+                alert('Error uploading file. Please try again.');
             },
             () => {
-                // On successful upload, get the download URL
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    this.handleUploadSuccess(file.name, downloadURL);
-                });
+                getDownloadURL(uploadTask.snapshot.ref)
+                    .then((downloadURL) => {
+                        setFileURL(downloadURL);
+                        onUploadSuccess(uniqueFilename, downloadURL);
+                        setIsUploading(false);
+                        // Show success toast only once after successful upload
+                        showSuccessToast("Image uploaded successfully!");
+                    })
+                    .catch((error) => {
+                        console.error('Error getting download URL:', error);
+                        setIsUploading(false);
+                        alert('Error getting file URL. Please try again.');
+                    });
             }
         );
     };
 
-    render() {
-        const { isUploading, fileURL } = this.state;
-
-        return (
-            <div>
-                <div>
+    return (
+        <div className="file-uploader">
+            <div className="upload-container">
+                <div className="input-container">
                     <input
                         type="file"
                         accept="image/*"
-                        onChange={this.handleFileChange}
+                        onChange={handleFileChange}
+                        className="file-input"
                     />
                 </div>
-                {isUploading && <CircularProgress />}
-                {fileURL && (
-                    <div>
-                        <p>File uploaded successfully!</p>
-                        <img src={fileURL} alt="Uploaded file" style={{ width: '200px' }} />
+                
+                {isUploading && (
+                    <div className="progress-container">
+                        <CircularProgress 
+                            variant="determinate" 
+                            value={uploadProgress} 
+                            size={24}
+                            className="progress-spinner"
+                        />
+                        <span className="progress-text">
+                            {Math.round(uploadProgress)}%
+                        </span>
                     </div>
                 )}
             </div>
-        );
-    }
-}
+        </div>
+    );
+};
 
 export default FileUploaderComponent;
