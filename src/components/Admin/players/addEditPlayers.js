@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AdminLayout from "../../../Hoc/AdminLayout";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { showErrorToast, showSuccessToast, selectErrorHelper, selectHasError } from "../../Utils/tools";import { Button, FormControl, MenuItem, Select } from '@mui/material';
+import { showErrorToast, showSuccessToast, selectErrorHelper, selectHasError } from "../../Utils/tools"; import { Button, FormControl, MenuItem, Select } from '@mui/material';
 import { playersCollection } from "../../../firebase";
 import { addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import CustomTextField from "./customTextField";
@@ -99,13 +99,14 @@ const AddEditPlayers = (props) => {
                             dir="players"
                             onUploadSuccess={handleUploadSuccess}
                         />
+                       { console.log(formik.values.image)}
                         {formik.values.image && (
-                            <div className="mb-4">
+                            <div className="image_upload_container">
                                 <img
                                     src={formik.values.image}
                                     alt="Current player"
-                                    style={{ height: '200px' }}
-                                />
+                                    style={{ width: '100%' }}>
+                                </img>
                             </div>
                         )}
                         <hr />
@@ -130,24 +131,24 @@ const AddEditPlayers = (props) => {
                             formik={formik}
                         />
                         <div className="mb-5">
-                                <FormControl error={selectHasError(formik, 'position')}>
-                                    <Select
-                                        id="position"
-                                        name="position"
-                                        {...formik.getFieldProps('position')}
-                                        variant='outlined'
-                                        displayEmpty
-                                    >
-                                        <MenuItem value='' disabled >Select a position</MenuItem>
-                                        <MenuItem value='Keeper'>Keeper</MenuItem>
-                                        <MenuItem value='Defence' >Defence</MenuItem>
-                                        <MenuItem value='Midfield'>Midfield</MenuItem>
-                                        <MenuItem value='Striker' >Sytriker</MenuItem>
+                            <FormControl error={selectHasError(formik, 'position')}>
+                                <Select
+                                    id="position"
+                                    name="position"
+                                    {...formik.getFieldProps('position')}
+                                    variant='outlined'
+                                    displayEmpty
+                                >
+                                    <MenuItem value='' disabled >Select a position</MenuItem>
+                                    <MenuItem value='Keeper'>Keeper</MenuItem>
+                                    <MenuItem value='Defence' >Defence</MenuItem>
+                                    <MenuItem value='Midfield'>Midfield</MenuItem>
+                                    <MenuItem value='Striker' >Sytriker</MenuItem>
 
-                                    </Select>
-                                    {selectErrorHelper(formik, 'position')}
-                                </FormControl>
-                            </div>
+                                </Select>
+                                {selectErrorHelper(formik, 'position')}
+                            </FormControl>
+                        </div>
 
                         <Button
                             variant="contained"
