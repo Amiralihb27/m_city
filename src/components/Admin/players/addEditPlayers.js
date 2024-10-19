@@ -31,7 +31,9 @@ const AddEditPlayers = (props) => {
             name: Yup.string().required('Name is required'),
             lastname: Yup.string().required('Lastname is required'),
             number: Yup.number().required('Number is required').min(0, 'The minimum is 0').max(100, 'The maximum is 100'),
-            position: Yup.string().required('Position is required')
+            position: Yup.string().required('Position is required'),
+            image: Yup.string()
+                .required('Image is required'),
         }),
         validateOnChange: true,
         onSubmit: (values) => {
@@ -69,6 +71,11 @@ const AddEditPlayers = (props) => {
         formik.setFieldValue('image', downloadURL);
     };
 
+    const resetImage = () => {
+        formik.setFieldValue('image', '');
+        showSuccessToast("Image removed!!!")
+    }
+
     useEffect(() => {
         if (playerid) {
             setFormType('edit');
@@ -99,7 +106,9 @@ const AddEditPlayers = (props) => {
                             dir="players"
                             onUploadSuccess={handleUploadSuccess}
                         />
-                       { console.log(formik.values.image)}
+
+
+                        {console.log(formik.values.image)}
                         {formik.values.image && (
                             <div className="image_upload_container">
                                 <img
@@ -107,6 +116,8 @@ const AddEditPlayers = (props) => {
                                     alt="Current player"
                                     style={{ width: '100%' }}>
                                 </img>
+                                <div className="remove" onClick={() => resetImage()}>Remove</div>
+
                             </div>
                         )}
                         <hr />
@@ -149,6 +160,7 @@ const AddEditPlayers = (props) => {
                                 {selectErrorHelper(formik, 'position')}
                             </FormControl>
                         </div>
+
 
                         <Button
                             variant="contained"

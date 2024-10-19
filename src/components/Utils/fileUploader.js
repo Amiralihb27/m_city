@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { getStorage } from 'firebase/storage';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { CircularProgress } from '@mui/material';
 import { app } from '../../firebase';
-import { showSuccessToast } from './tools';
+import { showErrorToast, showSuccessToast } from './tools';
 
 const FileUploaderComponent = ({ dir, onUploadSuccess }) => {
     const [isUploading, setIsUploading] = useState(false);
@@ -14,6 +14,7 @@ const FileUploaderComponent = ({ dir, onUploadSuccess }) => {
         const file = event.target.files[0];
         if (!file) return;
 
+        console.log(file);
         if (!file.type.startsWith('image/')) {
             alert('Please upload an image file');
             return;
@@ -52,6 +53,7 @@ const FileUploaderComponent = ({ dir, onUploadSuccess }) => {
             () => {
                 getDownloadURL(uploadTask.snapshot.ref)
                     .then((downloadURL) => {
+                        // console.log('downloadURL',downloadURL);
                         setFileURL(downloadURL);
                         onUploadSuccess(uniqueFilename, downloadURL);
                         setIsUploading(false);
@@ -65,7 +67,8 @@ const FileUploaderComponent = ({ dir, onUploadSuccess }) => {
                     });
             }
         );
-    };
+    };  
+
 
     return (
         <div className="file-uploader">
@@ -78,12 +81,12 @@ const FileUploaderComponent = ({ dir, onUploadSuccess }) => {
                         className="file-input"
                     />
                 </div>
-                
+
                 {isUploading && (
                     <div className="progress-container">
-                        <CircularProgress 
-                            variant="determinate" 
-                            value={uploadProgress} 
+                        <CircularProgress
+                            variant="determinate"
+                            value={uploadProgress}
                             size={24}
                             className="progress-spinner"
                         />

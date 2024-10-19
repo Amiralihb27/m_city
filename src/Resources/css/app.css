@@ -142,7 +142,12 @@ button {
     color: #ffffff;
     border: 1px solid white;
     padding: 10px;
+    
 }
+.image_upload_container .remove:hover{
+    cursor: pointer;
+}
+
 
 .not_found_container {
     text-align: center;
