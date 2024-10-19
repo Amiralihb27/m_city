@@ -5,7 +5,8 @@ import { toast } from 'react-toastify';
 import { auth } from '../../firebase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-
+import { ref, deleteObject ,getStorage} from 'firebase/storage';
+import { app } from '../../firebase';
 import { FormHelperText } from '@mui/material'
 
 
@@ -99,4 +100,18 @@ export const selectErrorHelper = (formik,values) => {
 
 export const  selectHasError = (formik,values) => {
     return formik.errors[values] && formik.touched[values];
+}
+
+export   const DeleteFile = (file) => {
+    const storage = getStorage(app);
+    const desertRef = ref(storage, file);
+
+    // Delete the file
+    deleteObject(desertRef).then(() => {
+     console.log('Removed from storage')
+    }).catch((error) => {
+        // Uh-oh, an error occurred!
+        console.log('Removed from storage')
+        showErrorToast("Error while removing Image!!!")
+    });
 }

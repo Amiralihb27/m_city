@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import AdminLayout from "../../../Hoc/AdminLayout";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { showErrorToast, showSuccessToast, selectErrorHelper, selectHasError } from "../../Utils/tools"; import { Button, FormControl, MenuItem, Select } from '@mui/material';
+import { showErrorToast, showSuccessToast, selectErrorHelper, selectHasError ,DeleteFile} from "../../Utils/tools";
+import { Button, FormControl, MenuItem, Select } from '@mui/material';
 import { playersCollection } from "../../../firebase";
 import { addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import CustomTextField from "./customTextField";
@@ -20,6 +21,7 @@ const AddEditPlayers = (props) => {
 
     const [loading, setLoading] = useState(false);
     const [formType, setFormType] = useState('');
+    const [fileName,setFileName] = useState('');
     const [values, setValues] = useState(defaultValues);
     const { playerid } = useParams();
     const navigate = useNavigate();
@@ -69,11 +71,14 @@ const AddEditPlayers = (props) => {
 
     const handleUploadSuccess = (filename, downloadURL) => {
         formik.setFieldValue('image', downloadURL);
+        setFileName(filename);
     };
 
     const resetImage = () => {
         formik.setFieldValue('image', '');
-        showSuccessToast("Image removed!!!")
+        showSuccessToast("Image ")
+        console.log("hi there",fileName)
+        DeleteFile(`players/${fileName}`);
     }
 
     useEffect(() => {
@@ -102,11 +107,10 @@ const AddEditPlayers = (props) => {
             <div className="editplayers_dialog_wrapper">
                 <div>
                     <form onSubmit={formik.handleSubmit}>
-                        <FileUploaderComponent
-                            dir="players"
-                            onUploadSuccess={handleUploadSuccess}
-                        />
-
+                    <FileUploaderComponent
+                    dir="players"
+                    onUploadSuccess={handleUploadSuccess}
+                />
 
                         {console.log(formik.values.image)}
                         {formik.values.image && (

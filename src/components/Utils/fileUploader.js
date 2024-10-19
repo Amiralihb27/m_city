@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { getStorage } from 'firebase/storage';
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL, getStorage } from 'firebase/storage';
 import { CircularProgress } from '@mui/material';
 import { app } from '../../firebase';
 import { showErrorToast, showSuccessToast } from './tools';
@@ -53,7 +52,7 @@ const FileUploaderComponent = ({ dir, onUploadSuccess }) => {
             () => {
                 getDownloadURL(uploadTask.snapshot.ref)
                     .then((downloadURL) => {
-                        // console.log('downloadURL',downloadURL);
+                        console.log(uniqueFilename);
                         setFileURL(downloadURL);
                         onUploadSuccess(uniqueFilename, downloadURL);
                         setIsUploading(false);
