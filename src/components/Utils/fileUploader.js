@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
-import { ref, uploadBytesResumable, getDownloadURL, getStorage } from 'firebase/storage';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { CircularProgress } from '@mui/material';
-import { app } from '../../firebase';
-import { showErrorToast, showSuccessToast } from './tools';
 
-const FileUploaderComponent = ({ dir, onUploadSuccess }) => {
-    const [isUploading, setIsUploading] = useState(false);
-    const [fileURL, setFileURL] = useState('');
-    const [uploadProgress, setUploadProgress] = useState(0);
+const FileUploaderComponent = forwardRef(({ onFileSelect }, ref) => {
+    const [previewURL, setPreviewURL] = useState('');
+    const fileInputRef = useRef(null);
+
+    // Expose methods to parent component through ref
+    useImperativeHandle(ref, () => ({
+        resetInput: () => {
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    }));
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (!file) return;
 
-        console.log(file);
         if (!file.type.startsWith('image/')) {
             alert('Please upload an image file');
             return;
@@ -25,78 +29,43 @@ const FileUploaderComponent = ({ dir, onUploadSuccess }) => {
             return;
         }
 
-        uploadFile(file);
+        // Revoke the previous URL if it exists
+        if (previewURL) {
+            URL.revokeObjectURL(previewURL);
+        }
+
+        // Create temporary preview
+        const tempURL = URL.createObjectURL(file);
+        setPreviewURL(tempURL);
+        onFileSelect(file, tempURL);
     };
 
-    const uploadFile = (file) => {
-        setIsUploading(true);
-        setUploadProgress(0);
-
-        const storage = getStorage(app);
-        const timestamp = new Date().getTime();
-        const uniqueFilename = `${timestamp}_${file.name}`;
-        const storageRef = ref(storage, `${dir}/${uniqueFilename}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on(
-            'state_changed',
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                setUploadProgress(progress);
-            },
-            (error) => {
-                console.error('Upload error:', error);
-                setIsUploading(false);
-                alert('Error uploading file. Please try again.');
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref)
-                    .then((downloadURL) => {
-                        console.log(uniqueFilename);
-                        setFileURL(downloadURL);
-                        onUploadSuccess(uniqueFilename, downloadURL);
-                        setIsUploading(false);
-                        // Show success toast only once after successful upload
-                        showSuccessToast("Image uploaded successfully!");
-                    })
-                    .catch((error) => {
-                        console.error('Error getting download URL:', error);
-                        setIsUploading(false);
-                        alert('Error getting file URL. Please try again.');
-                    });
+    // Cleanup effect
+    useEffect(() => {
+        return () => {
+            if (previewURL) {
+                URL.revokeObjectURL(previewURL);
             }
-        );
-    };  
-
+        };
+    }, [previewURL]);
 
     return (
         <div className="file-uploader">
             <div className="upload-container">
                 <div className="input-container">
                     <input
+                        ref={fileInputRef}
                         type="file"
                         accept="image/*"
                         onChange={handleFileChange}
                         className="file-input"
                     />
                 </div>
-
-                {isUploading && (
-                    <div className="progress-container">
-                        <CircularProgress
-                            variant="determinate"
-                            value={uploadProgress}
-                            size={24}
-                            className="progress-spinner"
-                        />
-                        <span className="progress-text">
-                            {Math.round(uploadProgress)}%
-                        </span>
-                    </div>
-                )}
             </div>
         </div>
     );
-};
+});
+
+FileUploaderComponent.displayName = 'FileUploaderComponent';
 
 export default FileUploaderComponent;

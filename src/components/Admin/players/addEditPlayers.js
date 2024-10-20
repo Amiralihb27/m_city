@@ -1,85 +1,131 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import AdminLayout from "../../../Hoc/AdminLayout";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import { showErrorToast, showSuccessToast, selectErrorHelper, selectHasError ,DeleteFile} from "../../Utils/tools";
+import { showErrorToast, showSuccessToast, selectErrorHelper, selectHasError ,textErrorHelper } from "../../Utils/tools";
 import { Button, FormControl, MenuItem, Select } from '@mui/material';
 import { playersCollection } from "../../../firebase";
 import { addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import CustomTextField from "./customTextField";
 import { useParams, useNavigate } from "react-router-dom";
 import FileUploaderComponent from '../../Utils/fileUploader';
+import { ref, uploadBytesResumable, getDownloadURL, getStorage } from 'firebase/storage';
+import { app } from '../../../firebase';
 
-const AddEditPlayers = (props) => {
+const AddEditPlayers = () => {
     const defaultValues = {
         name: '',
         lastname: '',
         number: '',
         position: '',
-        image: '' // Add image field to the default values
+        image: ''
     };
 
     const [loading, setLoading] = useState(false);
     const [formType, setFormType] = useState('');
-    const [fileName,setFileName] = useState('');
-    const [values, setValues] = useState(defaultValues);
+    const [tempImageFile, setTempImageFile] = useState(null);
+    const [tempImagePreview, setTempImagePreview] = useState('');
     const { playerid } = useParams();
     const navigate = useNavigate();
+    const fileUploaderRef = useRef(null);
 
     const formik = useFormik({
         enableReinitialize: true,
-        initialValues: values,
+        initialValues: defaultValues,
         validationSchema: Yup.object({
             name: Yup.string().required('Name is required'),
             lastname: Yup.string().required('Lastname is required'),
-            number: Yup.number().required('Number is required').min(0, 'The minimum is 0').max(100, 'The maximum is 100'),
+            number: Yup.number()
+                .required('Number is required')
+                .min(0, 'The minimum is 0')
+                .max(100, 'The maximum is 100'),
             position: Yup.string().required('Position is required'),
-            image: Yup.string()
-                .required('Image is required'),
+            image: Yup.string().required('Image is required')
         }),
-        validateOnChange: true,
-        onSubmit: (values) => {
-            submitForm(values);
+        onSubmit: async (values) => {
+            await submitForm(values);
         }
     });
+
+    const uploadImageToFirebase = async (file) => {
+        const storage = getStorage(app);
+        const timestamp = new Date().getTime();
+        const uniqueFilename = `${timestamp}_${file.name}`;
+        const storageRef = ref(storage, `players/${uniqueFilename}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        return new Promise((resolve, reject) => {
+            uploadTask.on(
+                'state_changed',
+                null,
+                (error) => reject(error),
+                async () => {
+                    try {
+                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                        resolve(downloadURL);
+                    } catch (error) {
+                        reject(error);
+                    }
+                }
+            );
+        });
+    };
 
     const submitForm = async (values) => {
         try {
             setLoading(true);
-            // Ensure we have all required data
+            let imageUrl = tempImageFile ? await uploadImageToFirebase(tempImageFile) : values.image;
+
             const playerData = {
                 ...values,
-                image: values.image || '' // Ensure image field exists even if empty
+                image: imageUrl
             };
+
             if (formType === 'add') {
                 await addDoc(playersCollection, playerData);
                 showSuccessToast("Player Added!");
                 formik.resetForm();
+                resetImage(); // Reset the image input after adding
                 navigate('/admin_players');
             } else {
                 const playerDocRef = doc(playersCollection, playerid);
                 await updateDoc(playerDocRef, playerData);
                 showSuccessToast("Player Updated!");
-                setLoading(false);
+                navigate('/admin_players');
             }
         } catch (error) {
-            showErrorToast("Error while adding player");
+            showErrorToast("Error while submitting form");
+        } finally {
             setLoading(false);
         }
     };
 
-
-    const handleUploadSuccess = (filename, downloadURL) => {
-        formik.setFieldValue('image', downloadURL);
-        setFileName(filename);
+    const handleFileSelect = (file, previewURL) => {
+        // Clean up previous preview URL if it exists
+        if (tempImagePreview && tempImagePreview !== formik.values.image) {
+            URL.revokeObjectURL(tempImagePreview);
+        }
+        
+        setTempImageFile(file);
+        setTempImagePreview(previewURL);
+        formik.setFieldValue('image', previewURL); // Set image value to preview URL
     };
 
     const resetImage = () => {
-        formik.setFieldValue('image', '');
-        showSuccessToast("Image ")
-        console.log("hi there",fileName)
-        DeleteFile(`players/${fileName}`);
-    }
+        // Clean up temporary preview URL
+        if (tempImagePreview && tempImagePreview !== formik.values.image) {
+            URL.revokeObjectURL(tempImagePreview);
+        }
+        
+        setTempImageFile(null);
+        setTempImagePreview('');
+        formik.setFieldValue('image', ''); // Reset image field value
+
+        // Reset file input using the ref
+        if (fileUploaderRef.current) {
+            fileUploaderRef.current.resetInput();
+        }
+    };
 
     useEffect(() => {
         if (playerid) {
@@ -87,15 +133,26 @@ const AddEditPlayers = (props) => {
             fetchAndUpdate(playerid);
         } else {
             setFormType('add');
-            setValues(defaultValues);
+            formik.setValues(defaultValues);
         }
+
+        // Cleanup function
+        return () => {
+            if (tempImagePreview && tempImagePreview !== formik.values.image) {
+                URL.revokeObjectURL(tempImagePreview);
+            }
+        };
     }, [playerid]);
 
     const fetchAndUpdate = async (playerid) => {
         const playerDocRef = doc(playersCollection, playerid);
         const playerDoc = await getDoc(playerDocRef);
         if (playerDoc.exists()) {
-            formik.setValues(playerDoc.data());
+            const playerData = playerDoc.data();
+            formik.setValues(playerData);
+            if (playerData.image) {
+                setTempImagePreview(playerData.image);
+            }
             setFormType('edit');
         } else {
             showErrorToast("No such document!");
@@ -107,23 +164,22 @@ const AddEditPlayers = (props) => {
             <div className="editplayers_dialog_wrapper">
                 <div>
                     <form onSubmit={formik.handleSubmit}>
-                    <FileUploaderComponent
-                    dir="players"
-                    onUploadSuccess={handleUploadSuccess}
-                />
+                        <FileUploaderComponent
+                            ref={fileUploaderRef}
+                            onFileSelect={handleFileSelect}
+                        />
 
-                        {console.log(formik.values.image)}
-                        {formik.values.image && (
+                        {(tempImagePreview || formik.values.image) && (
                             <div className="image_upload_container">
                                 <img
-                                    src={formik.values.image}
-                                    alt="Current player"
-                                    style={{ width: '100%' }}>
-                                </img>
-                                <div className="remove" onClick={() => resetImage()}>Remove</div>
-
+                                    src={tempImagePreview || formik.values.image}
+                                    alt="Player preview"
+                                    style={{ width: '100%' }}
+                                />
+                                <div className="remove" onClick={resetImage}>Remove</div>
                             </div>
                         )}
+                        {selectErrorHelper(formik, 'image')}
                         <hr />
                         <h4>Player Info</h4>
                         <CustomTextField
@@ -154,17 +210,15 @@ const AddEditPlayers = (props) => {
                                     variant='outlined'
                                     displayEmpty
                                 >
-                                    <MenuItem value='' disabled >Select a position</MenuItem>
+                                    <MenuItem value='' disabled>Select a position</MenuItem>
                                     <MenuItem value='Keeper'>Keeper</MenuItem>
-                                    <MenuItem value='Defence' >Defence</MenuItem>
+                                    <MenuItem value='Defence'>Defence</MenuItem>
                                     <MenuItem value='Midfield'>Midfield</MenuItem>
-                                    <MenuItem value='Striker' >Sytriker</MenuItem>
-
+                                    <MenuItem value='Striker'>Striker</MenuItem>
                                 </Select>
                                 {selectErrorHelper(formik, 'position')}
                             </FormControl>
                         </div>
-
 
                         <Button
                             variant="contained"

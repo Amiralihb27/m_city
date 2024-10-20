@@ -93,7 +93,10 @@ export const textErrorHelper = (formik,values) => ({
 export const selectErrorHelper = (formik,values) => {
     if(formik.errors[values] && formik.touched[values]){
         console.log(formik.errors)
-        return (<FormHelperText>{formik.errors[values]}</FormHelperText>)
+        return (<FormHelperText
+        style={{
+            color:'#d32f2f'
+        }}>{formik.errors[values]}</FormHelperText>)
     }
     return false;
 }
@@ -103,6 +106,7 @@ export const  selectHasError = (formik,values) => {
 }
 
 export   const DeleteFile = (file) => {
+    console.log(file)
     const storage = getStorage(app);
     const desertRef = ref(storage, file);
 
@@ -111,7 +115,7 @@ export   const DeleteFile = (file) => {
      console.log('Removed from storage')
     }).catch((error) => {
         // Uh-oh, an error occurred!
-        console.log('Removed from storage')
+        console.log('Error')
         showErrorToast("Error while removing Image!!!")
     });
 }
