@@ -11,6 +11,7 @@ import Dashboard from './components/Admin/Dashboard';
 import AuthGuard from './Hoc/Auth'; // Import the AuthGuard
 import AdminPlayers from './components/Admin/players';
 import AddEditPlayers from './components/Admin/players/addEditPlayers';
+import TheTeam from './components/theTeam';
 
 const AppRoutes = ({ user }) => {
   return (
@@ -45,6 +46,12 @@ const AppRoutes = ({ user }) => {
           path="/dashboard"
           element={
             <AuthGuard component={Dashboard} />
+          }
+        />
+        <Route
+          path="/the_team"
+          element={
+            <AuthGuard component={TheTeam} />
           }
         />
         <Route path="/sign_in" element={<SignIn whereTo={<Dashboard />} user={user} />} />
