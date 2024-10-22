@@ -28,6 +28,7 @@ const TheTeam = () => {
                 // Create an array of promises for fetching image URLs
                 const playerPromises = fetchedPlayers.map(async (player) => {
                     try {
+                        //complete this later for getting images from resourses not the firebase.
                         const storageRef = ref(storage, player.image);
                         const imageUrl = await getDownloadURL(storageRef);
                         const decodedPath = decodeURIComponent(imageUrl);

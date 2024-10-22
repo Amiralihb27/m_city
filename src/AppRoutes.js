@@ -12,14 +12,26 @@ import AuthGuard from './Hoc/Auth'; // Import the AuthGuard
 import AdminPlayers from './components/Admin/players';
 import AddEditPlayers from './components/Admin/players/addEditPlayers';
 import TheTeam from './components/theTeam';
-
+import AdminMatches from './components/Admin/match';
+import AddEditMatches from './components/Admin/match/addEditMatch';
 const AppRoutes = ({ user }) => {
   return (
     <BrowserRouter>
       <Header user={user} />  
 
       <Routes>
-
+      <Route
+          path="/admin_players/edit_match/:matchid"
+          element={
+            <AuthGuard component={AddEditPlayers} />
+          }
+        />
+        <Route
+          path="/admin_matches"
+          element={
+            <AuthGuard component={AdminMatches} />
+          }
+        />
 
         <Route
           path="/admin_players/edit_player/:playerid"
