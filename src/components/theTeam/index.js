@@ -7,6 +7,7 @@ import { getDocs } from 'firebase/firestore';
 import { showErrorToast } from '../Utils/tools';
 import { ref, getDownloadURL, getStorage } from 'firebase/storage';
 import { app } from '../../firebase';
+import { Category } from '@mui/icons-material';
 
 const TheTeam = () => {
     const [loading, setLoading] = useState(true);
@@ -27,9 +28,20 @@ const TheTeam = () => {
                     try {
                         const storageRef = ref(storage, player.image);
                         const imageUrl = await getDownloadURL(storageRef);
+                        const decodedPath = decodeURIComponent(imageUrl);
+
+                        // Step 2: Split the string by '/' to isolate the last part containing the file name and query parameters
+                        const pathParts = decodedPath.split('/');
+
+                        // Step 3: The image name with query parameters is the last part
+                        const imageWithQuery = pathParts[pathParts.length - 1];
+
+                        // Step 4: Remove the query parameters by splitting on '?'
+                        const imageName = (imageWithQuery.split('?')[0]).substring(imageWithQuery.indexOf('_') + 1);
+
                         return {
                             ...player,
-                            url: imageUrl // Store the image URL in the url property
+                            url: imageName // Store the image URL in the url property
                         };
                     } catch (error) {
                         console.error(`Error fetching image for player ${player.name}:`, error);
@@ -54,27 +66,74 @@ const TheTeam = () => {
         fetchPlayers();
     }, []); // Empty dependency array since we only want to fetch once
 
-    return (
-        <div className="w-full">
-            {loading ? (
-                <div className="flex justify-center items-center h-64">
-                    <CircularProgress className="w-12 h-12" />
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {players.map((player) => (
-                        <Slide key={player.id}>
+
+    const showPlayerByCategory = ((category) => {
+        const filteredPlayers = players.filter((player) => (player.position === category));
+        console.log(filteredPlayers
+
+        )
+        return (
+            filteredPlayers.map((player) => (
+                <div className='team_cards'>
+                    <div className='item'>
+                        <Slide key={player.id} triggerOnce>
                             <PlayerCard
-                                image={player.url}
+                                image={player.image}
                                 number={player.number}
                                 name={player.name}
                                 lastname={player.lastname}
                             />
                         </Slide>
-                    ))}
+                    </div>
+
                 </div>
-            )}
-        </div>
+            ))
+        )
+    })
+    return (
+        loading ? <div className='progress'>
+            <CircularProgress
+                size={100}
+                thickness={5}
+            />
+        </div> :
+            <div className='the_team_container'>
+                <div className='team_category_wrapper'>
+                    <div className='title'>
+                        Keeper
+                    </div>
+                    <div className='team_cards'>
+                        {showPlayerByCategory('Keeper')}
+                    </div>
+                </div>
+                <div className='team_category_wrapper'>
+                    <div className='title'>
+                        Defence
+                    </div>
+                    <div className='team_cards'>
+                        {showPlayerByCategory('Defence')}
+                    </div>
+                </div>
+                <div className='team_category_wrapper'>
+                    <div className='title'>
+                        Midfield
+                    </div>
+                    <div className='team_cards'>
+                        {showPlayerByCategory('Midfield')}
+                    </div>
+                </div>
+
+                <div className='team_category_wrapper'>
+                    <div className='title'>
+                        Striker
+                    </div>
+                    <div className='team_cards'>
+                        {showPlayerByCategory('Striker')}
+                    </div>
+                </div>
+
+
+            </div>
     );
 };
 
