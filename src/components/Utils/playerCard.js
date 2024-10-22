@@ -1,20 +1,20 @@
 import React from 'react';
 
-const PlayerCard = (props) => {
+const PlayerCard = ({image,number,name,lastname}) => {
     return(
         <div className="player_card_wrapper">
             <div
                 className="player_card_thmb"
-                style={{ background:`#f2f9ff url(${props.bck})`}}
+                style={{ background:`#f2f9ff url(${image})`}}
             >
             </div>
             <div className="player_card_nfo">
                 <div className="player_card_number">
-                    {props.number}
+                    {number}
                 </div>
                 <div className="player_card_name">
-                    <span>{props.name}</span>
-                    <span>{props.lastname}</span>
+                    <span>{name}</span>
+                    <span>{lastname}</span>
                 </div>
 
             </div>

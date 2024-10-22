@@ -50,10 +50,10 @@ const HomeCards = (props) => {
                 >
 
                     <PlayerCard
+                        image={card.playerImg}
                         number={foundPlayer.number}
                         name={foundPlayer.name}
                         lastname={foundPlayer.lastname}
-                        bck={card.playerImg}
                     />
                 </motion.div>
             )
