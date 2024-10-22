@@ -13,6 +13,10 @@ const TheTeam = () => {
     const storage = getStorage(app);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
+
+    useEffect(() => {
         const fetchPlayers = async () => {
             try {
                 const snapshot = await getDocs(playersCollection);

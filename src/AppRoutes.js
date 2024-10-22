@@ -51,7 +51,8 @@ const AppRoutes = ({ user }) => {
         <Route
           path="/the_team"
           element={
-            <AuthGuard component={TheTeam} />
+            // <AuthGuard component={TheTeam} />
+            <TheTeam />
           }
         />
         <Route path="/sign_in" element={<SignIn whereTo={<Dashboard />} user={user} />} />
