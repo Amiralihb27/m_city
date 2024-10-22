@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import PlayerCard from '../Utils/playerCard';
 import { CircularProgress } from '@mui/material';
 import { playersCollection } from '../../firebase';
-import { Slide } from 'react-awesome-reveal';
 import { getDocs } from 'firebase/firestore';
 import { showErrorToast } from '../Utils/tools';
 import { ref, getDownloadURL, getStorage } from 'firebase/storage';
 import { app } from '../../firebase';
-import { Category } from '@mui/icons-material';
+import CardsByPosition from './CardsByPosition';
 
 const TheTeam = () => {
     const [loading, setLoading] = useState(true);
@@ -64,32 +62,8 @@ const TheTeam = () => {
         };
 
         fetchPlayers();
-    }, []); // Empty dependency array since we only want to fetch once
+    }, [storage]); // Empty dependency array since we only want to fetch once
 
-
-    const showPlayerByCategory = ((category) => {
-        const filteredPlayers = players.filter((player) => (player.position === category));
-        console.log(filteredPlayers
-
-        )
-        return (
-            filteredPlayers.map((player) => (
-                <div className='team_cards'>
-                    <div className='item'>
-                        <Slide key={player.id} triggerOnce>
-                            <PlayerCard
-                                image={player.image}
-                                number={player.number}
-                                name={player.name}
-                                lastname={player.lastname}
-                            />
-                        </Slide>
-                    </div>
-
-                </div>
-            ))
-        )
-    })
     return (
         loading ? <div className='progress'>
             <CircularProgress
@@ -98,41 +72,23 @@ const TheTeam = () => {
             />
         </div> :
             <div className='the_team_container'>
-                <div className='team_category_wrapper'>
-                    <div className='title'>
-                        Keeper
-                    </div>
-                    <div className='team_cards'>
-                        {showPlayerByCategory('Keeper')}
-                    </div>
-                </div>
-                <div className='team_category_wrapper'>
-                    <div className='title'>
-                        Defence
-                    </div>
-                    <div className='team_cards'>
-                        {showPlayerByCategory('Defence')}
-                    </div>
-                </div>
-                <div className='team_category_wrapper'>
-                    <div className='title'>
-                        Midfield
-                    </div>
-                    <div className='team_cards'>
-                        {showPlayerByCategory('Midfield')}
-                    </div>
-                </div>
-
-                <div className='team_category_wrapper'>
-                    <div className='title'>
-                        Striker
-                    </div>
-                    <div className='team_cards'>
-                        {showPlayerByCategory('Striker')}
-                    </div>
-                </div>
-
-
+                <CardsByPosition
+                    position='Keeper'
+                    players={players}
+                />
+                <CardsByPosition
+                    position='Defence'
+                    players={players}
+                />
+                
+               <CardsByPosition
+                    position='Midfield'
+                    players={players}
+                />
+                <CardsByPosition
+                    position='Striker'
+                    players={players}
+                />
             </div>
     );
 };
