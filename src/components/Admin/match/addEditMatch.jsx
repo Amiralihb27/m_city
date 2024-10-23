@@ -5,8 +5,10 @@ import * as Yup from 'yup';
 import { teamsCollection, matchesCollection } from "../../../firebase";
 import { showErrorToast, showSuccessToast, selectErrorHelper, selectHasError, textErrorHelper } from "../../Utils/tools";
 import { useParams, useNavigate } from "react-router-dom";
-import { tr } from "framer-motion/client";
-
+import { Button, FormControl, MenuItem, Select } from '@mui/material';
+import CustomTextField from "../players/customTextField";
+import { getDocs } from 'firebase/firestore';
+import { addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 
 const defaultValues = {
     date: '',
@@ -20,11 +22,11 @@ const defaultValues = {
     final: ''
 }
 const AddEditMatches = () => {
-    const [loading, setloading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [formType, setFormType] = useState('');
-    const [team, setTeam] = useState([]);
+    const [teams, setTeam] = useState(null);
     const [values, setValues] = useState(null);
-    const { matchrid } = useParams();
+    const { matchid } = useParams();
     const navigate = useNavigate();
 
     const formik = useFormik({
@@ -47,22 +49,147 @@ const AddEditMatches = () => {
             result: Yup.mixed().required('This input is required').oneOf(['W', 'L', 'D', 'n/a']),
             final: Yup.mixed().required('This input is required').oneOf(['Yes', 'No'])
         }),
-        onSubmit:  (values) => {
+        onSubmit: (values) => {
             console.log(values);
         }
     })
+    useEffect(() => {
+        const fetchMatches = async () => {
+            try {
+                if (!teams) {
+                    setLoading(true);
+                    const snapshot = await getDocs(teamsCollection);
+                    const fetchedTeams = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    setTeam(fetchedTeams);
+                    console.log(teams);
+                }
+            }
+            catch (error) {
+                console.error("Error fetching matches:", error);
+                showErrorToast(error)
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchMatches();
+    }, [teams]);
+
+
+    useEffect(() => {
+        if (matchid) {
+            setFormType('edit');
+            fetchAndUpdate(matchid);
+        } else {
+            setFormType('add');
+            formik.setValues(defaultValues);
+        }
+    }, [matchid]);
+
+    const fetchAndUpdate = async (matchid) => {
+        const matchDocRef = doc(matchesCollection, matchid);
+        const matchDoc = await getDoc(matchDocRef);
+        if (matchDoc.exists()) {
+            const matchData = matchDoc.data();
+            formik.setValues(matchData);
+            setFormType('edit');
+        } else {
+            showErrorToast("No such document!");
+        }
+    };
+
+    const showTeams = () => (
+        teams ?
+            teams.map((item) => (
+                <MenuItem key={item.id} value={item.shortName}>
+                    {item.shortName}
+                </MenuItem>
+            ))
+            : null
+    )
 
 
     return (
-        <>  <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <div>
-                Edit
+        <AdminLayout title='undefiend'>
+            <div className="editmatch_dialog_wrapper">
+                <div>
+                    <form onSubmit={formik.handleSubmit}>
+                        <h4>Select the date</h4>
+                        <CustomTextField
+                            id="date"
+                            name="date"
+                            type="date"
+                            placeholder="date"
+                            formik={formik}
+                        />
+
+                        <hr />
+
+                        <h4>Result local</h4>
+                        <div className="sameRow mb-5">
+                            <FormControl error={selectHasError(formik, 'local')}>
+                                <Select
+                                    id="local"
+                                    name="local"
+                                    {...formik.getFieldProps('local')}
+                                    variant='outlined'
+                                    displayEmpty
+                                >
+                                    <MenuItem value='' disabled>Select a team</MenuItem>
+                                    {showTeams()}
+                                </Select>
+                                {selectErrorHelper(formik, 'local')}
+                            </FormControl>
+                            <CustomTextField
+                                id="resultLocal"
+                                name="resultLocal"
+                                type="number"
+                                placeholder="resultLocal"
+                                variant='outLined'
+                                formik={formik}
+                                style={{
+                                    marginLeft: '10px'
+                                }}
+                            />
+
+                        </div>
+
+                        <h4>Result away</h4>
+                        <div className="sameRow mb-5">
+                            <FormControl error={selectHasError(formik, 'away')}>
+                                <Select
+                                    id="away"
+                                    name="away"
+                                    {...formik.getFieldProps('away')}
+                                    variant='outlined'
+                                    displayEmpty
+                                >
+                                    <MenuItem value='' disabled>Select a team</MenuItem>
+                                    {showTeams()}
+                                </Select>
+                                {selectErrorHelper(formik, 'away')}
+                            </FormControl>
+                            <CustomTextField
+                                id="resultAway"
+                                name="resultAway"
+                                type="number"
+                                placeholder="resultAway"
+                                variant='outLined'
+                                formik={formik}
+                                style={{
+                                    marginLeft: '10px'
+                                }}
+                            />
+
+                        </div>
+                    </form>
+                </div>
             </div>
-        </>
+
+        </AdminLayout>
     )
 }
 

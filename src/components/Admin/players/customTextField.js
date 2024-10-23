@@ -3,10 +3,10 @@ import { FormControl, TextField } from '@mui/material';
 import { textErrorHelper, selectErrorHelper, selectIsError } from "../../Utils/tools";
 
 
-const CustomTextField = ({ id, name, type = 'text', placeholder, formik }) => {
+const CustomTextField = ({ id, name, type = 'text', placeholder, formik , style }) => {
     return (
         <div className="mb-5">
-            <FormControl>
+            <FormControl  style={style}>
                 <TextField
                     id={id}
                     type={type}
@@ -15,6 +15,8 @@ const CustomTextField = ({ id, name, type = 'text', placeholder, formik }) => {
                     placeholder={placeholder}
                     {...formik.getFieldProps(name)}
                     {...textErrorHelper(formik, name)}
+                   
+
                 //     {textErrorHelper(formik, name)} would pass the entire object as a single prop (which TextField wouldn't understand), like:
                 // <TextField errorHelper={{ error: true, helperText: "some error" }} />
                 // This won't work because TextField expects error and helperText to be separate props, not wrapped inside another object.
