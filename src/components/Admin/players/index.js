@@ -85,9 +85,9 @@ const AdminPlayers = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>First name</TableCell>
-                                <TableCell align="right">Last name</TableCell>
-                                <TableCell align="right">Number</TableCell>
-                                <TableCell align="right">Position</TableCell>
+                                <TableCell >Last name</TableCell>
+                                <TableCell >Number</TableCell>
+                                <TableCell >Position</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -101,13 +101,13 @@ const AdminPlayers = () => {
                                             {player.name}
                                         </Link>
                                     </TableCell>
-                                    <TableCell align="right">
+                                    <TableCell >
                                         <Link to={`/admin_players/edit_player/${player.id}`}>
                                             {player.lastname}
                                         </Link>
                                     </TableCell>
-                                    <TableCell align="right">{player.number}</TableCell>
-                                    <TableCell align="right">{player.position}</TableCell>
+                                    <TableCell >{player.number}</TableCell>
+                                    <TableCell >{player.position}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

@@ -84,9 +84,9 @@ const AdminMatches = () => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Date</TableCell>
-                                <TableCell align="right">Match</TableCell>
-                                <TableCell align="right">Result</TableCell>
-                                <TableCell align="right">Final</TableCell>
+                                <TableCell >Match</TableCell>
+                                <TableCell >Result</TableCell>
+                                <TableCell >Final</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -99,15 +99,15 @@ const AdminMatches = () => {
                                     <TableCell >
                                         {match.date}
                                     </TableCell>
-                                    <TableCell align="right">
+                                    <TableCell >
                                         <Link to={`/admin_matches/edit_match/${match.id}`}>
                                         {match.away} <strong>-</strong> {match.local}
                                         </Link>
                                     </TableCell>
-                                    <TableCell align="right">
+                                    <TableCell >
                                         {match.resultAway} <strong>-</strong> {match.resultLocal}
                                     </TableCell>
-                                    <TableCell align="right">
+                                    <TableCell >
                                         {match.final === 'Yes' ?
                                         <span className="matches_tag_red">Final</span>
                                         :

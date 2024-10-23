@@ -21,12 +21,18 @@ const AppRoutes = ({ user }) => {
 
       <Routes>
       <Route
-          path="/admin_players/edit_match/:matchid"
+          path="/admin_matches/edit_match/:matchid"
           element={
-            <AuthGuard component={AddEditPlayers} />
+            <AuthGuard component={AddEditMatches} />
           }
         />
         <Route
+          path="/admin_matches/add_match"
+          element={
+            <AuthGuard component={AddEditMatches} />
+          }
+        />
+         <Route
           path="/admin_matches"
           element={
             <AuthGuard component={AdminMatches} />
