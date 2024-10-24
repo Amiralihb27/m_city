@@ -6,7 +6,6 @@ import { Button } from "@mui/material";
 import { showErrorToast } from "../../Utils/tools"; import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
@@ -20,14 +19,13 @@ const AdminMatches = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        const fetchPlayers = async () => {
+        const fetchMatches = async () => {
             try {
                 if (!matches) {
                     setLoading(true);
                     const q = query(matchesCollection, limit(2)); // Use query for limits
                     const snapshot = await getDocs(q); // Use getDocs to fetch data
                     const matchesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    // console.log(playersData)
                     setMatches(matchesData);
                     const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
                     setLastVisible(lastVisibleDoc);
@@ -41,10 +39,10 @@ const AdminMatches = () => {
             }
         };
 
-        fetchPlayers();
+        fetchMatches();
     }, [matches]);
 
-    const loadMorePlayer = async () => {
+    const loadMoreMatches = async () => {
         try {
             if (lastVisible) {
                 setLoading(false);
@@ -120,12 +118,12 @@ const AdminMatches = () => {
                     </Table>
                 </Paper>
             ) : (
-                <p>No players available.</p> // Optional: Message for no players
+                <p>No Matches available.</p>
             )}
             <Button
                 variant="contained"
                 // color='primary'
-                onClick={loadMorePlayer}
+                onClick={loadMoreMatches}
                 disabled={loading}
                 style={{
                     backgroundColor: '#67B2DB'
