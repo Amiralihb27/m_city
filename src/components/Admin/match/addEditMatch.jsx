@@ -6,7 +6,7 @@ import { teamsCollection, matchesCollection } from "../../../firebase";
 import { showErrorToast, showSuccessToast, selectErrorHelper, selectHasError, textErrorHelper } from "../../Utils/tools";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button, FormControl, MenuItem, Select } from '@mui/material';
-import CustomTextField from "../players/customTextField";
+import CustomTextField from "../../Utils/customTextField";
 import { getDocs } from 'firebase/firestore';
 import { addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 

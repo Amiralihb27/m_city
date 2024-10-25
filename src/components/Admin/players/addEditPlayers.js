@@ -6,7 +6,7 @@ import { showErrorToast, showSuccessToast, selectErrorHelper, selectHasError ,te
 import { Button, FormControl, MenuItem, Select } from '@mui/material';
 import { playersCollection } from "../../../firebase";
 import { addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import CustomTextField from "./customTextField";
+import CustomTextField from "../../Utils/customTextField";
 import { useParams, useNavigate } from "react-router-dom";
 import FileUploaderComponent from '../../Utils/fileUploader';
 import { ref, uploadBytesResumable, getDownloadURL, getStorage } from 'firebase/storage';
