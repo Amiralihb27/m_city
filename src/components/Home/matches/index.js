@@ -27,7 +27,7 @@ const MatchesHome = () =>{
                 size='1.5rem'
                 color='#0e1731'
                 link={true}
-                linkTo='/the_team'
+                linkTo='/the_matches'
                 >
                     Matches
                 </Tag>
