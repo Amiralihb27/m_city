@@ -14,7 +14,7 @@ import AddEditPlayers from './components/Admin/players/addEditPlayers';
 import TheTeam from './components/theTeam';
 import AdminMatches from './components/Admin/match';
 import AddEditMatches from './components/Admin/match/addEditMatch';
-import theMatches from './components/theMatches';
+import TheMatches from './components/theMatches';
 const AppRoutes = ({ user }) => {
   return (
     <BrowserRouter>
@@ -74,7 +74,7 @@ const AppRoutes = ({ user }) => {
             <TheTeam />
           }
         />
-        <Route path="/the_matches" element={<theMatches />} />
+        <Route path="/the_matches" element={<TheMatches />} />
         <Route path="/sign_in" element={<SignIn whereTo={<Dashboard />} user={user} />} />
         <Route path="/" element={<Home />} />
       </Routes>
