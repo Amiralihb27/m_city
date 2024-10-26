@@ -20,9 +20,9 @@ import {  CircularProgress } from '@mui/material';
 const defaultValues = {
     date: '',
     local: '',
-    resultLocal: '',
+    resultLocal: '0',
     away: '',
-    resultAway: '',
+    resultAway: '0',
     referee: '',
     stadium: '',
     result: '',

@@ -1,13 +1,10 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { ListItem } from '@mui/material';
-import { auth } from '../../../firebase';
-import { showErrorToast, showSuccessToast, logoutHandler } from '../../Utils/tools';
-import AdminLayout from '../../../Hoc/AdminLayout';
+import { ListItemButton, ListItemText } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { logoutHandler } from '../../Utils/tools';
 
-
-const AdminNav = (props) => {
+const AdminNav = () => {
     const navigate = useNavigate();
 
     const links = [
@@ -19,28 +16,32 @@ const AdminNav = (props) => {
             title: "Players",
             linkTo: "/admin_players"
         }
-    ]
+    ];
 
     const renderItems = () => {
         return links.map(link => (
-            <Link to={link.linkTo} key={link.title}>
-                <ListItem button className='admin_nav_link'>
-                    {link.title}
-                </ListItem>
-            </Link>
-        ))
-    }
+            <ListItemButton
+                component={Link}
+                to={link.linkTo}
+                key={link.title}
+                className='admin_nav_link'
+            >
+                <ListItemText primary={link.title} />
+            </ListItemButton>
+        ));
+    };
+
     return (
         <div>
             {renderItems()}
-            <Link>
-                <ListItem button className='admin_nav_link'
-                    onClick={() => (logoutHandler(navigate))}>
-                    Log out
-                </ListItem>
-            </Link>
+            <ListItemButton
+                onClick={() => logoutHandler(navigate)}
+                className='admin_nav_link'
+            >
+                <ListItemText primary="Log out" />
+            </ListItemButton>
         </div>
-    )
-}
+    );
+};
 
 export default AdminNav;

@@ -14,13 +14,14 @@ import AddEditPlayers from './components/Admin/players/addEditPlayers';
 import TheTeam from './components/theTeam';
 import AdminMatches from './components/Admin/match';
 import AddEditMatches from './components/Admin/match/addEditMatch';
+import theMatches from './components/theMatches';
 const AppRoutes = ({ user }) => {
   return (
     <BrowserRouter>
-      <Header user={user} />  
+      <Header user={user} />
 
       <Routes>
-      <Route
+        <Route
           path="/admin_matches/edit_match/:matchid"
           element={
             <AuthGuard component={AddEditMatches} />
@@ -32,7 +33,7 @@ const AppRoutes = ({ user }) => {
             <AuthGuard component={AddEditMatches} />
           }
         />
-         <Route
+        <Route
           path="/admin_matches"
           element={
             <AuthGuard component={AdminMatches} />
@@ -73,6 +74,7 @@ const AppRoutes = ({ user }) => {
             <TheTeam />
           }
         />
+        <Route path="/the_matches" element={<theMatches />} />
         <Route path="/sign_in" element={<SignIn whereTo={<Dashboard />} user={user} />} />
         <Route path="/" element={<Home />} />
       </Routes>
