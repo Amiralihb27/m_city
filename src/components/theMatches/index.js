@@ -180,8 +180,6 @@ const TheMatches = () => {
                   </div>
                 </div>
               </div>
-
-              {/* Matches List */}
               <MatchesList matches={state.filterMatches} />
             </div>
 
