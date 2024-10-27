@@ -1,66 +1,84 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { showSuccessToast, showErrorToast } from '../Utils/tools';
+import { showErrorToast } from '../Utils/tools';
 import { CircularProgress } from '@mui/material';
-import { matchesCollection } from '../../firebase';
+import { matchesCollection, positionsCollection } from '../../firebase';
 import { getDocs } from 'firebase/firestore';
 import MatchesList from './mathesList';
 import LeagueTable from './tebles';
 
 const TheMatches = () => {
     const [matches, setMatches] = useState(null);
+    const [positions, setPositions] = useState(null);
     const [loading, setLoading] = useState(false);
     const hasFetched = useRef(false); // Use a ref to keep track of first fetch
 
     useEffect(() => {
         if (hasFetched.current) return; // Prevent running twice
 
-        const fetchMatches = async () => {
+        const fetchData = async () => {
             setLoading(true);
             try {
-                const snapshot = await getDocs(matchesCollection);
-                const fetchedMatches = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
+                // Fetch matches and positions concurrently
+                const [matchesSnapshot, positionsSnapshot] = await Promise.all([
+                    getDocs(matchesCollection),
+                    getDocs(positionsCollection),
+                ]);
 
-                console.log(fetchedMatches);
+                // Process matches data
+                const fetchedMatches = matchesSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
                 setMatches(fetchedMatches);
-                // showSuccessToast('Matches fetched successfully');
+
+                // Process positions data
+                const fetchedPositions = positionsSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                setPositions(fetchedPositions);
+
             } catch (error) {
-                console.error('Error fetching matches:', error);
-                showErrorToast("Error while fetching matches");
+                console.error('Error fetching data:', error);
+                showErrorToast("Error while fetching data");
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchMatches();
+        fetchData();
         hasFetched.current = true; // Mark fetch as done
 
     }, []); // Empty dependency array to run only once
 
     if (loading) {
-        return <CircularProgress />;
+        return (
+            <div className='progress'>
+                <CircularProgress />
+            </div>
+        );
     }
 
     return (
         <>
-            {matches ?
+            {matches && positions ? (
                 <div className='the_matches_container'>
                     <div className='the_matches_wrapper'>
                         <div className='left'>
-                            <MatchesList />
+                            <MatchesList matches={matches} />
                         </div>
                         <div className='right'>
-                            <LeagueTable />
+                            <LeagueTable positions={positions} />
                         </div>
                     </div>
-                </div> :
+                </div>
+            ) : (
                 <div className='progress'>
                     <CircularProgress />
-                </div>}
+                </div>
+            )}
         </>
     );
-}
+};
 
 export default TheMatches;
