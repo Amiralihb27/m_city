@@ -15,6 +15,7 @@ import TheTeam from './components/theTeam';
 import AdminMatches from './components/Admin/match';
 import AddEditMatches from './components/Admin/match/addEditMatch';
 import TheMatches from './components/theMatches';
+import NotFound from './components/notFound';
 const AppRoutes = ({ user }) => {
   return (
     <BrowserRouter>
@@ -77,6 +78,7 @@ const AppRoutes = ({ user }) => {
         <Route path="/the_matches" element={<TheMatches />} />
         <Route path="/sign_in" element={<SignIn whereTo={<Dashboard />} user={user} />} />
         <Route path="/" element={<Home />} />
+        <Route  path="*" element={<NotFound/>}/>
       </Routes>
       <ToastContainer />
       <Footer />
