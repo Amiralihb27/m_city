@@ -35,6 +35,11 @@ const TheMatches = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+
     let isMounted = true; // To handle component unmounting
     const fetchData = async () => {
       setLoading(true);

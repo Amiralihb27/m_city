@@ -18,6 +18,8 @@ const AdminMatches = () => {
     const [lastVisible, setLastVisible] = useState(null);
     const [loading, setLoading] = useState(false);
 
+   
+
     useEffect(() => {
         const fetchMatches = async () => {
             try {
@@ -89,7 +91,7 @@ const AdminMatches = () => {
                         </TableHead>
                         <TableBody>
                             {matches.map((match) => (
-                    
+
                                 <TableRow
                                     key={match.id} // Use a unique identifier for the key
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -99,7 +101,7 @@ const AdminMatches = () => {
                                     </TableCell>
                                     <TableCell >
                                         <Link to={`/admin_matches/edit_match/${match.id}`}>
-                                        {match.away} <strong>-</strong> {match.local}
+                                            {match.away} <strong>-</strong> {match.local}
                                         </Link>
                                     </TableCell>
                                     <TableCell >
@@ -107,9 +109,9 @@ const AdminMatches = () => {
                                     </TableCell>
                                     <TableCell >
                                         {match.final === 'Yes' ?
-                                        <span className="matches_tag_red">Final</span>
-                                        :
-                                        <span className="matches_tag_green">Not played yet</span>
+                                            <span className="matches_tag_red">Final</span>
+                                            :
+                                            <span className="matches_tag_green">Not played yet</span>
                                         }
                                     </TableCell>
                                 </TableRow>

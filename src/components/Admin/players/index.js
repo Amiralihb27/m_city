@@ -43,7 +43,7 @@ const AdminPlayers = () => {
         };
 
         fetchPlayers();
-    }, [players]);
+    }, []);
 
     const loadMorePlayer = async () => {
         try {
@@ -55,7 +55,7 @@ const AdminPlayers = () => {
                 setPlayers([...players, ...newPlayerData]);
                 const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
                 setLastVisible(lastVisibleDoc);
-                console.log(players)
+               
             }
             else {
                 console.log('no more player to load')
