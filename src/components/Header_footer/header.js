@@ -10,7 +10,7 @@ import { CityLogo } from "../Utils/tools"
 // import { auth } from '../../firebase';
 import { logoutHandler } from "../Utils/tools";
 import { toast } from 'react-toastify';
-import { showErrorToast,showSuccessToast } from '../Utils/tools';
+import { showErrorToast, showSuccessToast } from '../Utils/tools';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -43,6 +43,9 @@ const Header = ({ user }) => {
                     </div>
 
                 </div>
+                <Link to="/">
+                    <Button color="inherit">Home</Button>
+                </Link>
                 <Link to="/the_team">
                     <Button color="inherit"> The Team</Button>
                 </Link>
@@ -60,6 +63,16 @@ const Header = ({ user }) => {
                     </>
                     :
                     null
+                }
+                {!user &&
+                    <>
+
+                        <Link to="/sign_in">
+                            <Button color="inherit"> sign in</Button>
+                        </Link>
+
+                    </>
+
                 }
             </Toolbar>
 
