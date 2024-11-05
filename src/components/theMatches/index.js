@@ -4,25 +4,29 @@ import { showErrorToast } from '../Utils/tools';
 import { CircularProgress, Box, Typography } from '@mui/material';
 import { matchesCollection, positionsCollection } from '../../firebase';
 import { getDocs } from 'firebase/firestore';
-import MatchesList from './mathesList';
-import LeagueTable from './tebles';
+import MatchesList from './matchesList';
+import LeagueTable from './tables';
+
+// Define action types as constants to prevent typos
+const SET_FILTER_MATCHES = 'SET_FILTER_MATCHES';
+const SET_LAST_CLICKED_FILTER = 'SET_LAST_CLICKED_FILTER';
 
 // Initial state for useReducer
 const initialState = {
   filterMatches: [],
-  playedFilter: 'All',
-  resultFilter: 'All',
+  lastClickedFilter: {
+    group: 'playedFilter',
+    value: 'All',
+  },
 };
 
 // Reducer function for useReducer
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'SET_FILTER_MATCHES':
+    case SET_FILTER_MATCHES:
       return { ...state, filterMatches: action.payload };
-    case 'SET_PLAYED_FILTER':
-      return { ...state, playedFilter: action.payload };
-    case 'SET_RESULT_FILTER':
-      return { ...state, resultFilter: action.payload };
+    case SET_LAST_CLICKED_FILTER:
+      return { ...state, lastClickedFilter: action.payload };
     default:
       return state;
   }
@@ -39,7 +43,6 @@ const TheMatches = () => {
   }, []);
 
   useEffect(() => {
-
     let isMounted = true; // To handle component unmounting
     const fetchData = async () => {
       setLoading(true);
@@ -65,7 +68,7 @@ const TheMatches = () => {
         if (isMounted) {
           setMatches(fetchedMatches);
           setPositions(fetchedPositions);
-          dispatch({ type: 'SET_FILTER_MATCHES', payload: fetchedMatches });
+          dispatch({ type: SET_FILTER_MATCHES, payload: fetchedMatches });
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -91,10 +94,9 @@ const TheMatches = () => {
     } else {
       filtered = matches.filter(match => match.final === played);
     }
-    console.log(filtered)
 
-    dispatch({ type: 'SET_PLAYED_FILTER', payload: played });
-    dispatch({ type: 'SET_FILTER_MATCHES', payload: filtered });
+    dispatch({ type: SET_LAST_CLICKED_FILTER, payload: { group: 'playedFilter', value: played } });
+    dispatch({ type: SET_FILTER_MATCHES, payload: filtered });
   };
 
   // Function to handle result filters (W, L, D)
@@ -105,9 +107,10 @@ const TheMatches = () => {
     } else {
       filtered = matches.filter(match => match.result === result);
     }
-    console.log(filtered)
-    dispatch({ type: 'SET_RESULT_FILTER', payload: result });
-    dispatch({ type: 'SET_FILTER_MATCHES', payload: filtered });
+
+    // Corrected the action type here
+    dispatch({ type: SET_LAST_CLICKED_FILTER, payload: { group: 'resultFilter', value: result } });
+    dispatch({ type: SET_FILTER_MATCHES, payload: filtered });
   };
 
   if (loading) {
@@ -132,19 +135,19 @@ const TheMatches = () => {
                   </Typography>
                   <div className='cont'>
                     <div
-                      className={`option ${state.playedFilter === 'All' ? 'active' : ''}`}
+                      className={`option ${state.lastClickedFilter.group === 'playedFilter' && state.lastClickedFilter.value === 'All' ? 'active' : ''}`}
                       onClick={() => showPlayed('All')}
                     >
                       All
                     </div>
                     <div
-                      className={`option ${state.playedFilter === 'Yes' ? 'active' : ''}`}
+                      className={`option ${state.lastClickedFilter.group === 'playedFilter' && state.lastClickedFilter.value === 'Yes' ? 'active' : ''}`}
                       onClick={() => showPlayed('Yes')}
                     >
                       Played
                     </div>
                     <div
-                      className={`option ${state.playedFilter === 'No' ? 'active' : ''}`}
+                      className={`option ${state.lastClickedFilter.group === 'playedFilter' && state.lastClickedFilter.value === 'No' ? 'active' : ''}`}
                       onClick={() => showPlayed('No')}
                     >
                       Not Played
@@ -159,25 +162,25 @@ const TheMatches = () => {
                   </Typography>
                   <div className='cont'>
                     <div
-                      className={`option ${state.resultFilter === 'All' ? 'active' : ''}`}
+                      className={`option ${state.lastClickedFilter.group === 'resultFilter' && state.lastClickedFilter.value === 'All' ? 'active' : ''}`}
                       onClick={() => showResult('All')}
                     >
                       All
                     </div>
                     <div
-                      className={`option ${state.resultFilter === 'W' ? 'active' : ''}`}
+                      className={`option ${state.lastClickedFilter.group === 'resultFilter' && state.lastClickedFilter.value === 'W' ? 'active' : ''}`}
                       onClick={() => showResult('W')}
                     >
                       W
                     </div>
                     <div
-                      className={`option ${state.resultFilter === 'L' ? 'active' : ''}`}
+                      className={`option ${state.lastClickedFilter.group === 'resultFilter' && state.lastClickedFilter.value === 'L' ? 'active' : ''}`}
                       onClick={() => showResult('L')}
                     >
                       L
                     </div>
                     <div
-                      className={`option ${state.resultFilter === 'D' ? 'active' : ''}`}
+                      className={`option ${state.lastClickedFilter.group === 'resultFilter' && state.lastClickedFilter.value === 'D' ? 'active' : ''}`}
                       onClick={() => showResult('D')}
                     >
                       D
